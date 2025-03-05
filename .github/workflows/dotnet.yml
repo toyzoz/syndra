@@ -58,7 +58,7 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         password: ${{ secrets.VPS_VPS_PASSWORD }}
         key: ${{ secrets.SSH_KEY }}
-        run: |
+        script: |
           echo "发布完成，开始重启服务 🚀"
           sudo systemctl restart myapp.service
           echo "服务已重启 🎉"
