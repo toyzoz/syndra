@@ -17,11 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: print working directory
-      run: pwd
-    - name: list files
-      run: ls -la
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
