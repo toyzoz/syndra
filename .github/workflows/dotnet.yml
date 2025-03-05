@@ -58,17 +58,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }} 
         source: "./publish/*"
         target: /var/devops
-        overwrite: true
-    
-    - name: Restart service on VPS
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          echo "发布完成，开始重启服务 🚀"
-          sudo systemctl restart myapp.service
-          echo "服务已重启 🎉"
+        
   
         
