@@ -41,15 +41,21 @@ jobs:
     - name: Test
       run: dotnet test Devops.sln --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
     
-    # - name: SCP Command to Transfer Files
-    #   uses: appleboy/scp-action@v0.1.7
-    #   with:
-    #     host: ${{ secrets.VPS_HOST }}
-    #     username: ${{ secrets.VPS_USERNAME }}
-    #     password: ${{ secrets.VPS_VPS_PASSWORD }}
-    #     key: ${{ secrets.SSH_KEY }} 
-    #     source: "tests/a.txt,tests/b.txt"
-    #     target: /var/devops
+    - name: Publish
+      run: dotnet publish --configuration Release --output ./publish
+  
+    - name: List files in the current directory
+      run: ls -la  
+      
+    - name: SCP Command to Transfer Files
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        password: ${{ secrets.VPS_VPS_PASSWORD }}
+        key: ${{ secrets.SSH_KEY }} 
+        source: "./publish"
+        target: /var/devops
     
     - name: Restart service on VPS
       uses: appleboy/ssh-action@v0.1.10
