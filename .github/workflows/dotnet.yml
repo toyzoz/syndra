@@ -27,8 +27,8 @@ jobs:
       with:
         dotnet-version: 9.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore Devops.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build Devops.sln --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test Devops.sln --no-build --verbosity normal
