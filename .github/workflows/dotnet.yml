@@ -58,6 +58,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }} 
         source: "./publish/*"
         target: /var/devops
+        overwrite: true
     
     - name: Restart service on VPS
       uses: appleboy/ssh-action@v0.1.10
