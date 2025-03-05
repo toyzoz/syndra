@@ -1,7 +1,5 @@
 ﻿using Catalog.API.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 
 namespace Catalog.API.Extensions
 {
