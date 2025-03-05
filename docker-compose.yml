@@ -1,0 +1,10 @@
+services:
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: src/Catalog.API/Dockerfile
+
+  catalogdb:
+    image: mcr.microsoft.com/mssql/server
+    
