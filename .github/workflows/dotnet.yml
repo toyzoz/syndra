@@ -45,7 +45,7 @@ jobs:
       run: dotnet test ${{ env.SOLUTION_NAME }}  --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
     
     - name: Publish
-      run: dotnet publish Catalog.API.csproj --configuration Release --output ./publish
+      run: dotnet publish ./src/Catalog.API/Catalog.API.csproj --configuration Release --output ./publish
   
     - name: List files in the current directory
       run: ls -la  
