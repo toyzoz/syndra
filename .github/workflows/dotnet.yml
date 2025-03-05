@@ -55,7 +55,6 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        password: ${{ secrets.VPS_VPS_PASSWORD }}
         key: ${{ secrets.SSH_KEY }} 
         source: "./publish/*"
         target: /var/devops
@@ -65,7 +64,6 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
-        password: ${{ secrets.VPS_VPS_PASSWORD }}
         key: ${{ secrets.SSH_KEY }}
         script: |
           echo "发布完成，开始重启服务 🚀"
