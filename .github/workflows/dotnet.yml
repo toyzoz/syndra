@@ -41,24 +41,26 @@ jobs:
     - name: Test
       run: dotnet test Devops.sln --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
     
-    - name: SCP Command to Transfer Files
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USERNAME }}
-        password: ${{ secrets.VPS_VPS_PASSWORD }}
-        key: ${{ secrets.SSH_KEY }} 
-        source: "tests/a.txt,tests/b.txt"
-        target: /var/devops
+    # - name: SCP Command to Transfer Files
+    #   uses: appleboy/scp-action@v0.1.7
+    #   with:
+    #     host: ${{ secrets.VPS_HOST }}
+    #     username: ${{ secrets.VPS_USERNAME }}
+    #     password: ${{ secrets.VPS_VPS_PASSWORD }}
+    #     key: ${{ secrets.SSH_KEY }} 
+    #     source: "tests/a.txt,tests/b.txt"
+    #     target: /var/devops
     
     - name: Restart service on VPS
-      run: |
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        password: ${{ secrets.VPS_VPS_PASSWORD }}
+        key: ${{ secrets.SSH_KEY }}
+        run: |
           echo "发布完成，开始重启服务 🚀"
           sudo systemctl restart myapp.service
           echo "服务已重启 🎉"
-      # uses: appleboy/ssh-action@v0.1.10
-      # with:
-      #   host: ${{ secrets.VPS_HOST }}
-      #   username: ${{ secrets.VPS_USER }}
-      #   key: ${{ secrets.VPS_SSH_KEY }}
+  
         
