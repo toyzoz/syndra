@@ -17,7 +17,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
-await app.UseDataSeedAsync();
+await app.InitializeDatabaseAsync();
 
 app.UseAuthorization();
 
