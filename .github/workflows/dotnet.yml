@@ -41,10 +41,23 @@ jobs:
     - name: Test
       run: dotnet test Devops.sln --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
     
-    # - name: Upload dotnet test results
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: dotnet-results-${{ matrix.dotnet-version }}
-    #     path: TestResults-${{ matrix.dotnet-version }}
-    #       # Use always() to always run this step to publish test results when there are test failures
-    #     # if: always()  
+    - name: SCP Command to Transfer Files
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        source: "tests/a.txt,tests/b.txt"
+        target: your_server_target_folder_path
+    
+    - name: Restart service on VPS
+      # uses: appleboy/ssh-action@v0.1.10
+      # with:
+      #   host: ${{ secrets.VPS_HOST }}
+      #   username: ${{ secrets.VPS_USER }}
+      #   key: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          echo "发布完成，开始重启服务 🚀"
+          sudo systemctl restart myapp.service
+          echo "服务已重启 🎉"
