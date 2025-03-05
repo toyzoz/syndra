@@ -44,12 +44,11 @@ jobs:
     - name: SCP Command to Transfer Files
       uses: appleboy/scp-action@v0.1.7
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        password: ${{ secrets.VPS_VPS_PASSWORD }}
         source: "tests/a.txt,tests/b.txt"
-        target: your_server_target_folder_path
+        target: /var/devops
     
     - name: Restart service on VPS
       run: |
