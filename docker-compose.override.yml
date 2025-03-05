@@ -14,3 +14,20 @@ services:
       - SA_PASSWORD=Password123
     ports:
       - "1433:1433"
+
+  ordering.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Database=Server=orderingdb;Database=OrderingDb;User Id=sa;Password=Password123;
+    ports:
+      - "8080"
+
+
+  orderingdb:
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password123
+    ports:
+      - "1433:1433"
+

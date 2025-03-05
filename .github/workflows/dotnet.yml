@@ -14,7 +14,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      SOLUTION_NAME: Devops.sln
+      SOLUTION_NAME: Syndra.sln
       
     strategy:
       matrix:
@@ -44,8 +44,10 @@ jobs:
     - name: Test
       run: dotnet test ${{ env.SOLUTION_NAME }}  --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
     
-    - name: Publish
-      run: dotnet publish ./src/Catalog.API/Catalog.API.csproj --configuration Release --output ./publish
+    - name: Publish Catalog.API
+      run: dotnet publish ./src/Catalog.API/Catalog.API.csproj --configuration Release --output ./publish/catalog
+    - name: Publish Ordering.API
+      run: dotnet publish ./src/Ordering.API/Ordering.API.csproj --configuration Release --output ./publish/Ordering
   
     - name: List files in the current directory
       run: ls -la  
@@ -57,7 +59,7 @@ jobs:
         username: ${{ secrets.VPS_USERNAME }}
         key: ${{ secrets.SSH_KEY }} 
         source: "./publish/*"
-        target: /var/devops
+        target: /var/Syndra
         
   
         
