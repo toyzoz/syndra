@@ -52,12 +52,13 @@ jobs:
         target: your_server_target_folder_path
     
     - name: Restart service on VPS
+      run: |
+          echo "发布完成，开始重启服务 🚀"
+          sudo systemctl restart myapp.service
+          echo "服务已重启 🎉"
       # uses: appleboy/ssh-action@v0.1.10
       # with:
       #   host: ${{ secrets.VPS_HOST }}
       #   username: ${{ secrets.VPS_USER }}
       #   key: ${{ secrets.VPS_SSH_KEY }}
-        run: |
-          echo "发布完成，开始重启服务 🚀"
-          sudo systemctl restart myapp.service
-          echo "服务已重启 🎉"
+        
