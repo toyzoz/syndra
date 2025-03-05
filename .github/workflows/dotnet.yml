@@ -13,17 +13,38 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '9.0.x' ]
 
     steps:
     - uses: actions/checkout@v4
 
+    - name: Print current directory
+      run: pwd
+
+    - name: List files in the current directory
+      run: ls -la
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: ${{ matrix.dotnet-version }}
+
+    - name: Display dotnet version
+      run: dotnet --version
+
     - name: Restore dependencies
       run: dotnet restore Devops.sln
     - name: Build
       run: dotnet build Devops.sln --no-restore
     - name: Test
-      run: dotnet test Devops.sln --no-build --verbosity normal
+      run: dotnet test Devops.sln --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+    
+    - name: Upload dotnet test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: dotnet-results-${{ matrix.dotnet-version }}
+        path: TestResults-${{ matrix.dotnet-version }}
+          # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}  
