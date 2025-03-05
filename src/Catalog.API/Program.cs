@@ -1,6 +1,7 @@
 using Catalog.API.Data;
 using Catalog.API.Extensions;
 using Catalog.API.Models;
+using GoodRandom;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -11,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddApplicationServices(builder.Configuration);
 
+var str = MyRandom.GetRandom();
+Console.WriteLine(str);
 
 var app = builder.Build();
 
