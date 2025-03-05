@@ -13,6 +13,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      SOLUTION_NAME: Devops.sln
+      
     strategy:
       matrix:
         dotnet-version: [ '9.0.x' ]
@@ -35,14 +38,14 @@ jobs:
       run: dotnet --version
 
     - name: Restore dependencies
-      run: dotnet restore Devops.sln
+      run: dotnet restore ${{ env.SOLUTION_NAME }} 
     - name: Build
-      run: dotnet build Devops.sln --no-restore
+      run: dotnet build ${{ env.SOLUTION_NAME }}  --no-restore
     - name: Test
-      run: dotnet test Devops.sln --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+      run: dotnet test ${{ env.SOLUTION_NAME }}  --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
     
     - name: Publish
-      run: dotnet publish Devops.sln --configuration Release --output ./publish
+      run: dotnet publish ${{ env.SOLUTION_NAME }}  --configuration Release --output ./publish
   
     - name: List files in the current directory
       run: ls -la  
@@ -54,7 +57,7 @@ jobs:
         username: ${{ secrets.VPS_USERNAME }}
         password: ${{ secrets.VPS_VPS_PASSWORD }}
         key: ${{ secrets.SSH_KEY }} 
-        source: "./publish"
+        source: "./publish/*"
         target: /var/devops
     
     - name: Restart service on VPS
