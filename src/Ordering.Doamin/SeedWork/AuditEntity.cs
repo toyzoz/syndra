@@ -1,6 +1,5 @@
-﻿namespace Ordering.Doamin.SeedWork
+﻿namespace Ordering.Domain.SeedWork
 {
-
     public class AuditEntity
     {
         public int CreateBy { get; set; }

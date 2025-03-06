@@ -1,12 +1,7 @@
-﻿using Ordering.Doamin.Orders;
-using Ordering.Doamin.SeedWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ordering.Domain.Orders;
+using Ordering.Domain.SeedWork;
 
-namespace Ordering.Doamin.Events
+namespace Ordering.Domain.Events
 {
-    public record OrderCreatedDomainEvent(Order newOrder) : IDomainEvent;
+    public record OrderCreatedDomainEvent(Order Order) : IDomainEvent;
 }

@@ -1,8 +1,8 @@
-﻿namespace Ordering.Doamin.SeedWork
+﻿namespace Ordering.Domain.SeedWork
 {
-    public class AggregateRoot : IAggregateRoot
+    public abstract class AggregateRoot : Entity, IAggregateRoot
     {
-        private List<IDomainEvent> _domainEvents = [];
+        private readonly List<IDomainEvent> _domainEvents = [];
         public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
         public void AddDomainEvent(IDomainEvent @event)

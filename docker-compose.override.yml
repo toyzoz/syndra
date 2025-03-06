@@ -3,9 +3,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Database=Server=catalogdb;Database=CatalogDb;User Id=sa;Password=Password123;
+      - ConnectionStrings__Database=Server=catalogdb;Database=CatalogDb;User Id=sa;Password=Password123;TrustServerCertificate=True;
     ports:
-      - "8088:8080"
+      - "5000:8080"
+    depends_on:
+      - catalogdb
 
 
   catalogdb:
@@ -19,9 +21,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__Database=Server=orderingdb;Database=OrderingDb;User Id=sa;Password=Password123;
+      - ConnectionStrings__Database=Server=orderingdb;Database=OrderingDb;User Id=sa;Password=Password123;TrustServerCertificate=True;
     ports:
-      - "8080"
+      - "5001:8080"
+    depends_on:
+      - orderingdb
 
 
   orderingdb:
@@ -29,5 +33,5 @@ services:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Password123
     ports:
-      - "1433:1433"
+      - "1434:1433"
 

@@ -5,8 +5,8 @@
         [Fact]
         public void Test1()
         {
-            var a = 1.0;
-            var b = 1;
+            double a = 1.0;
+            int b = 1;
 
             Assert.Equal(a, b);
         }

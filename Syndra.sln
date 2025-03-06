@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "src\Catalog.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.API", "src\Ordering.API\Ordering.API.csproj", "{C78FFC87-A926-22B5-E12A-DB453C07340D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Doamin", "src\Ordering.Doamin\Ordering.Doamin.csproj", "{DE32548A-5B17-46EC-915D-26B29E0E0F98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Domain", "src\Ordering.Doamin\Ordering.Domain.csproj", "{DE32548A-5B17-46EC-915D-26B29E0E0F98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Application", "src\Ordering.Application\Ordering.Application.csproj", "{64A63235-7D2C-B2EE-E7F7-A19BCDC97C33}"
 EndProject

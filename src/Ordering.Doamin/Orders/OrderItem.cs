@@ -1,12 +1,15 @@
-﻿
-namespace Ordering.Doamin.Orders
+﻿using Ordering.Domain.SeedWork;
+
+namespace Ordering.Domain.Orders
 {
-    public class OrderItem
+    public class OrderItem: Entity
     {
-        public OrderItem(int productId, 
+        private OrderItem() { }
+
+        public OrderItem(int productId,
             string productName,
-            string productPicUrl, 
-            decimal unitPrice, 
+            string productPicUrl,
+            decimal unitPrice,
             int units)
         {
             ProductId = productId;
@@ -16,9 +19,9 @@ namespace Ordering.Doamin.Orders
             Units = units;
         }
 
-        public int ProductId { get; private set;}
-        public string ProductName { get;private set; }
-        public string PictureUrl { get;private set; }
+        public int ProductId { get; private set; }
+        public string ProductName { get; private set; } = default!;
+        public string PictureUrl { get; private set; } = default!;
         public decimal UnitPrice { get; private set; }
         public int Units { get; private set; }
 
@@ -28,6 +31,7 @@ namespace Ordering.Doamin.Orders
             {
                 throw new OrderingDomainException("Invalid unit");
             }
+
             Units += units;
         }
     }

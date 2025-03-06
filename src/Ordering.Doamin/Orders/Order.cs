@@ -1,29 +1,24 @@
-﻿using Ordering.Doamin.Events;
-using Ordering.Doamin.SeedWork;
-using System.Runtime.CompilerServices;
+﻿using Ordering.Domain.Events;
+using Ordering.Domain.SeedWork;
 
-namespace Ordering.Doamin.Orders
+namespace Ordering.Domain.Orders
 {
-    public class Order: AggregateRoot
+    public class Order : AggregateRoot
     {
-        public string Description { get; private set; } = default!;
-
         private readonly List<OrderItem> _orderItems = [];
-        public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
-
-        public int Id { get; set; }
 
         private Order() { }
+        public string Description { get; private set; } = default!;
+        public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
+
+
         public static Order Create(string description)
         {
-             var newOrder= new Order
-            {
-                Description = description
-            };
+            var order = new Order { Description = description };
 
-            newOrder.AddDomainEvent(new OrderCreatedDomainEvent(newOrder));
+            order.AddDomainEvent(new OrderCreatedDomainEvent(order));
 
-            return newOrder;
+            return order;
         }
 
         public void AddItem(int productId,
@@ -32,10 +27,9 @@ namespace Ordering.Doamin.Orders
             decimal unitPrice,
             int units)
         {
+            OrderItem? existingProduct = _orderItems.SingleOrDefault(oi => oi.ProductId == productId);
 
-            OrderItem exectingProduct = _orderItems.Single(oi => oi.ProductId == productId);
-
-            if (exectingProduct is null)
+            if (existingProduct is null)
             {
                 OrderItem orderItem = new(productId,
                     productName,
@@ -46,7 +40,7 @@ namespace Ordering.Doamin.Orders
             }
             else
             {
-                exectingProduct.AddUnits(units);
+                existingProduct.AddUnits(units);
             }
         }
     }

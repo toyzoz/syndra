@@ -1,5 +1,4 @@
-﻿
-namespace Ordering.Doamin.Orders
+﻿namespace Ordering.Domain.Orders
 {
     internal class OrderingDomainException : Exception
     {
@@ -7,13 +6,13 @@ namespace Ordering.Doamin.Orders
         {
         }
 
-        public OrderingDomainException(string? message) 
+        public OrderingDomainException(string? message)
             : base(message)
         {
         }
 
         public OrderingDomainException(string? message,
-            Exception? innerException) 
+            Exception? innerException)
             : base(message, innerException)
         {
         }

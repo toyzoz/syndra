@@ -1,32 +1,28 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Ordering.Doamin.Orders;
-using System.Threading.Tasks;
+using Ordering.Application.Orders;
+using Ordering.Domain.Orders;
 
 namespace Ordering.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class OrdersController(IOrderRepository repository,
-        ILogger<OrdersController> logger) : ControllerBase
+    public class OrdersController(
+        OrderService service) : ControllerBase
     {
-
-
-
-
         [HttpGet]
-        public async Task<Ok<IEnumerable<Order>>> GetListAsync()
+        public async Task<Ok<List<Order>>> GetListAsync()
         {
-            var result = await repository.GetListAsync();
+            List<Order> orders = await service.GetListAsync();
 
-            return TypedResults.Ok(result);
+            return TypedResults.Ok(orders);
         }
-        [HttpPost]
-        public async Task<Ok<CreatedAtRoute<Order>>> GetListAsync(Order order)
-        {
-            var result = await repository.CreateAsync(order);
 
-            throw new NotImplementedException();
+        [HttpPost]
+        public async Task<Created> CreateAsync(Order order)
+        {
+            Order result = await service.CreateOrderAsync(order);
+            return TypedResults.Created($"/orders/{result.Id}");
         }
     }
 }

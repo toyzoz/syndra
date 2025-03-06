@@ -15,51 +15,51 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SOLUTION_NAME: Syndra.sln
-      
+    
     strategy:
       matrix:
         dotnet-version: [ '9.0.x' ]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Print current directory
-      run: pwd
+      - name: Print current directory
+        run: pwd
 
-    - name: List files in the current directory
-      run: ls -la
+      - name: List files in the current directory
+        run: ls -la
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
 
-    - name: Display dotnet version
-      run: dotnet --version
+      - name: Display dotnet version
+        run: dotnet --version
 
-    - name: Restore dependencies
-      run: dotnet restore ${{ env.SOLUTION_NAME }} 
-    - name: Build
-      run: dotnet build ${{ env.SOLUTION_NAME }}  --no-restore
-    - name: Test
-      run: dotnet test ${{ env.SOLUTION_NAME }}  --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
-    
-    - name: Publish Catalog.API
-      run: dotnet publish ./src/Catalog.API/Catalog.API.csproj --configuration Release --output ./publish/catalog
-    - name: Publish Ordering.API
-      run: dotnet publish ./src/Ordering.API/Ordering.API.csproj --configuration Release --output ./publish/Ordering
-  
-    - name: List files in the current directory
-      run: ls -la  
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOLUTION_NAME }}
+      - name: Build
+        run: dotnet build ${{ env.SOLUTION_NAME }}  --no-restore
+      - name: Test
+        run: dotnet test ${{ env.SOLUTION_NAME }}  --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
 
-    - name: SCP Command to Transfer Files
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.SSH_KEY }} 
-        source: "./publish/*"
-        target: /var/Syndra
+      - name: Publish Catalog.API
+        run: dotnet publish ./src/Catalog.API/Catalog.API.csproj --configuration Release --output ./publish/catalog
+      - name: Publish Ordering.API
+        run: dotnet publish ./src/Ordering.API/Ordering.API.csproj --configuration Release --output ./publish/Ordering
+
+      - name: List files in the current directory
+        run: ls -la
+
+      - name: SCP Command to Transfer Files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "./publish/*"
+          target: /var/Syndra
         
   
         

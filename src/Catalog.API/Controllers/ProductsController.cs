@@ -21,11 +21,7 @@ namespace Catalog.API.Controllers
         [HttpPost]
         public async Task CreateAsync(Product input)
         {
-            Product product = new()
-            {
-                Name = input.Name,
-                Description = input.Description
-            };
+            Product product = new() { Name = input.Name, Description = input.Description };
             context.Products.Add(product);
             await context.SaveChangesAsync();
         }
