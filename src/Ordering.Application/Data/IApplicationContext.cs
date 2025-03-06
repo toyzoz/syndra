@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ordering.Application.Contract
+namespace Ordering.Application.Data
 {
     public interface IApplicationContext
     {

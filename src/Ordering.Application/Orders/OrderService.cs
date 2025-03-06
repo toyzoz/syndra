@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Ordering.Application.Contract;
+using Ordering.Application.Data;
 using Ordering.Domain.Orders;
 
 

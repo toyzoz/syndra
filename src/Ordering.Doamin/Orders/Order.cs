@@ -8,6 +8,12 @@ namespace Ordering.Domain.Orders
         private readonly List<OrderItem> _orderItems = [];
 
         private Order() { }
+
+        public Order(string description)
+        {
+            Description = description;
+        }
+
         public string Description { get; private set; } = default!;
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
 

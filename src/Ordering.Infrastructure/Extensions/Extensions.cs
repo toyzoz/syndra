@@ -1,8 +1,12 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ordering.Application.Data;
 using Ordering.Infrastructure.Data;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+
 
 namespace Ordering.Infrastructure.Extensions
 {
@@ -16,14 +20,20 @@ namespace Ordering.Infrastructure.Extensions
                 options.UseSqlServer(configuration.GetConnectionString("Database"));
             });
 
-           
+
+            services.AddScoped<IApplicationContext, OrderContext>();
+
             return services;
         }
 
-        //public static void Migration(this WebApplication app)
-        //{
-        //    app.Services.CreateScope().ServiceProvider.GetRequiredService<OrderContext>().Database.Migrate();
-        //}
+        public static async Task ApplyMigrationsAsync(this WebApplication app)
+        {
+
+            using var scope = app.Services.CreateScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<OrderContext>();
+            await context.Database.MigrateAsync();
+        }
     }
 
 
