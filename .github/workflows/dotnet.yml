@@ -59,7 +59,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           source: "./publish/*"
-          target: /var/Syndra
+          target: /var/app/Syndra
         
   
         
