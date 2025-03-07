@@ -6,7 +6,7 @@ namespace Ordering.API.Extensions
 {
     public static class Extensions
     {
-        public static IServiceCollection AddApplicationService(this IServiceCollection services)
+        public static IServiceCollection AddApiService(this IServiceCollection services)
         {
             services.AddScoped<OrderService>();
           

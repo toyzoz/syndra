@@ -1,8 +1,10 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ordering.Application.Data;
+using Ordering.Domain.SeedWork;
 using Ordering.Infrastructure.Data;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -33,6 +35,30 @@ namespace Ordering.Infrastructure.Extensions
 
             var context = scope.ServiceProvider.GetRequiredService<OrderContext>();
             await context.Database.MigrateAsync();
+        }
+
+
+        public static async Task DispatchDomainEventsAsync(this IMediator mediator, OrderContext context)
+        {
+            var aggregateEntries = context.ChangeTracker.Entries<AggregateRoot>();
+
+            var hasEventEntity = aggregateEntries
+                    .Where(x => x.Entity.DomainEvents.Count != 0);
+
+            var domainEvents = hasEventEntity
+                .SelectMany(e => e.Entity.DomainEvents)
+                .ToList();
+
+            foreach (var item in hasEventEntity)
+            {
+                item.Entity.ClearDomainEvent();
+            }
+
+            foreach (var domainEvent in domainEvents)
+            {
+                Console.WriteLine($"{nameof(domainEvent)} published");
+                await mediator.Publish(domainEvent);
+            }
         }
     }
 

@@ -9,7 +9,13 @@ namespace Ordering.Application.Orders
     {
         public async Task<Order> CreateOrderAsync(Order order)
         {
-            context.Orders.Add(order);
+           var newOrder= Order.Create(order.Description);
+            foreach (var item in order.OrderItems)
+            {
+                newOrder.AddItem(item.ProductId, item.ProductName, item.PictureUrl,
+                    item.UnitPrice, item.Units);
+            }
+            context.Orders.Add(newOrder);
             await context.SaveChangesAsync();
 
             return order;

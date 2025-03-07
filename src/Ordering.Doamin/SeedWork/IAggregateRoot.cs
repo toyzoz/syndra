@@ -3,6 +3,6 @@
     public interface IAggregateRoot
     {
         void AddDomainEvent(IDomainEvent @event);
-        void ClearDomainEvent(IDomainEvent @event);
+        void ClearDomainEvent();
     }
 }

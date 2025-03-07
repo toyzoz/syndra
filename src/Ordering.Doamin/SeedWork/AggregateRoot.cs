@@ -7,12 +7,12 @@
 
         public void AddDomainEvent(IDomainEvent @event)
         {
-            throw new NotImplementedException();
+            _domainEvents.Add(@event);
         }
 
-        public void ClearDomainEvent(IDomainEvent @event)
+        public void ClearDomainEvent( )
         {
-            throw new NotImplementedException();
+            _domainEvents.Clear();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Ordering.Domain.Orders
 
         private Order() { }
 
-        public Order(string description)
+        private Order(string description)
         {
             Description = description;
         }
@@ -20,7 +20,7 @@ namespace Ordering.Domain.Orders
 
         public static Order Create(string description)
         {
-            var order = new Order { Description = description };
+            var order = new Order(description);
 
             order.AddDomainEvent(new OrderCreatedDomainEvent(order));
 
