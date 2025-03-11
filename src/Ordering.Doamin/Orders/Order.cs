@@ -33,7 +33,7 @@ namespace Ordering.Domain.Orders
             decimal unitPrice,
             int units)
         {
-            OrderItem? existingProduct = _orderItems.SingleOrDefault(oi => oi.ProductId == productId);
+            var existingProduct = _orderItems.SingleOrDefault(oi => oi.ProductId == productId);
 
             if (existingProduct is null)
             {

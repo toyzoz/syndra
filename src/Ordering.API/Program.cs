@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Hosting;
 using Ordering.API.Extensions;
 using Ordering.Application.Extensions;
 using Ordering.Infrastructure.Extensions;
 using Scalar.AspNetCore;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -19,8 +18,7 @@ builder.Services.AddMediatR(configuration =>
     configuration.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
-WebApplication app = builder.Build();
-
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {

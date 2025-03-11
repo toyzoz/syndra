@@ -2,7 +2,7 @@
 
 namespace Ordering.Domain.Orders
 {
-    public class OrderItem: Entity
+    public class OrderItem : Entity
     {
         private OrderItem() { }
 

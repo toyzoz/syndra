@@ -10,12 +10,13 @@ namespace Ordering.API.Controllers
     [ApiController]
     [Route("[controller]")]
     public class OrdersController(
-        OrderService service, IMediator mediator) : ControllerBase
+        OrderService service,
+        IMediator mediator) : ControllerBase
     {
         [HttpGet]
         public async Task<Ok<List<Order>>> GetListAsync()
         {
-            List<Order> orders = await service.GetListAsync();
+            var orders = await service.GetListAsync();
 
             await mediator.Publish(new OrderQueryDomainEvent(DateTime.Now));
 
@@ -25,7 +26,7 @@ namespace Ordering.API.Controllers
         [HttpPost]
         public async Task<Created> CreateAsync(Order order)
         {
-            Order result = await service.CreateOrderAsync(order);
+            var result = await service.CreateOrderAsync(order);
             return TypedResults.Created($"/orders/{result.Id}");
         }
     }

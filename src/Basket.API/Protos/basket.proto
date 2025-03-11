@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "Basket.API";
+
+package BasketApi;
+
+service Basket {
+  rpc GetBasket (GetBasketRequest) returns (CustomerBasketResponse);
+  rpc DeleteBasket (DeleteBasketRequest) returns (DeleteBasketResponse);
+  rpc UpdateBasket (UpdateBasketRequest) returns (CustomerBasketResponse);
+}
+
+message GetBasketRequest{
+
+}
+message CustomerBasketResponse{
+  repeated BaskItem items = 1;
+}
+message DeleteBasketRequest{}
+message UpdateBasketRequest{
+  repeated BaskItem items = 1;
+}
+message DeleteBasketResponse{}
+message BaskItem{
+  int32 product_id = 1;
+  int32 quantity = 2;
+}

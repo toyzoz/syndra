@@ -16,6 +16,8 @@ services:
       - SA_PASSWORD=Password123
     ports:
       - "1433:1433"
+    volumes:
+      - catalogdb_data:/var/opt/mssql
 
   ordering.api:
     environment:
@@ -34,4 +36,6 @@ services:
       - SA_PASSWORD=Password123
     ports:
       - "1434:1433"
+    volumes:
+      - orderingdb_data:/var/opt/mssql
 

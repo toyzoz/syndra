@@ -6,9 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Ordering.Application.Data;
 using Ordering.Domain.SeedWork;
 using Ordering.Infrastructure.Data;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-
 
 namespace Ordering.Infrastructure.Extensions
 {
@@ -22,7 +19,6 @@ namespace Ordering.Infrastructure.Extensions
                 options.UseSqlServer(configuration.GetConnectionString("Database"));
             });
 
-
             services.AddScoped<IApplicationContext, OrderContext>();
 
             return services;
@@ -30,20 +26,19 @@ namespace Ordering.Infrastructure.Extensions
 
         public static async Task ApplyMigrationsAsync(this WebApplication app)
         {
-
             using var scope = app.Services.CreateScope();
-
             var context = scope.ServiceProvider.GetRequiredService<OrderContext>();
             await context.Database.MigrateAsync();
         }
 
 
-        public static async Task DispatchDomainEventsAsync(this IMediator mediator, OrderContext context)
+        public static async Task DispatchDomainEventsAsync(this IMediator mediator,
+            OrderContext context)
         {
             var aggregateEntries = context.ChangeTracker.Entries<AggregateRoot>();
 
             var hasEventEntity = aggregateEntries
-                    .Where(x => x.Entity.DomainEvents.Count != 0);
+                .Where(x => x.Entity.DomainEvents.Count != 0);
 
             var domainEvents = hasEventEntity
                 .SelectMany(e => e.Entity.DomainEvents)
@@ -61,6 +56,4 @@ namespace Ordering.Infrastructure.Extensions
             }
         }
     }
-
-
 }

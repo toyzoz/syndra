@@ -10,7 +10,7 @@
             _domainEvents.Add(@event);
         }
 
-        public void ClearDomainEvent( )
+        public void ClearDomainEvent()
         {
             _domainEvents.Clear();
         }

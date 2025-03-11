@@ -19,3 +19,7 @@ services:
   orderingdb:
     image: mcr.microsoft.com/mssql/server
 
+
+volumes:
+  catalogdb_data:
+  orderingdb_data:
