@@ -15,10 +15,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options.Servers = Array.Empty<ScalarServer>();
-    });
+    app.MapScalarApiReference(options => { options.Servers = Array.Empty<ScalarServer>(); });
 }
 
 await app.InitializeDatabaseAsync();

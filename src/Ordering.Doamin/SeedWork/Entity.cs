@@ -1,7 +1,6 @@
-﻿namespace Ordering.Domain.SeedWork
+﻿namespace Ordering.Domain.SeedWork;
+
+public abstract class Entity
 {
-    public abstract class Entity
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

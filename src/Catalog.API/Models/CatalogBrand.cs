@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Catalog.API.Models
+namespace Catalog.API.Models;
+
+public class CatalogBrand
 {
-    public class CatalogBrand
-    {
-        public int Id { get; set; }
-        [Required] [MaxLength(50)] public required string Brand { get; set; }
-    }
+    public int Id { get; set; }
+    [Required] [MaxLength(50)] public required string Brand { get; set; }
 }

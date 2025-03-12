@@ -1,8 +1,7 @@
-﻿namespace Ordering.Domain.SeedWork
+﻿namespace Ordering.Domain.SeedWork;
+
+public interface IAggregateRoot
 {
-    public interface IAggregateRoot
-    {
-        void AddDomainEvent(IDomainEvent @event);
-        void ClearDomainEvent();
-    }
+    void AddDomainEvent(IDomainEvent @event);
+    void ClearDomainEvent();
 }

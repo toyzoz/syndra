@@ -1,64 +1,54 @@
 using Catalog.API.Exceptions;
 
-namespace Catalog.API.Models
+namespace Catalog.API.Models;
+
+public class CatalogItem
 {
-    public class CatalogItem
+    public int Id { get; set; }
+    public string Name { get; set; } = default!;
+    public string Description { get; set; } = null!;
+    public decimal Price { get; set; }
+    public string PictureFileName { get; set; } = null!;
+    public int CatalogTypeId { get; set; }
+    public CatalogType? CatalogType { get; set; }
+    public int CatalogBrandId { get; set; }
+    public CatalogBrand? CatalogBrand { get; set; }
+
+    // 可用库存
+    public int AvailableStock { get; set; }
+
+    // 库存阈值
+    public int RestockThreshold { get; set; }
+
+    // 最大库存
+    public int MaxStockThreshold { get; set; }
+
+    public int RemoveStock(int quantityDesired)
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = default!;
-        public string Description { get; set; } = null!;
-        public decimal Price { get; set; }
-        public string PictureFileName { get; set; } = null!;
-        public int CatalogTypeId { get; set; }
-        public CatalogType? CatalogType { get; set; }  
-        public int CatalogBrandId { get; set; }
-        public CatalogBrand? CatalogBrand { get; set; }  
+        if (quantityDesired < 0) throw new CatalogDomainException($"Invalid quantity {quantityDesired}");
 
-        // 可用库存
-        public int AvailableStock { get; set; }
+        if (AvailableStock == 0) throw new CatalogDomainException("Empty stock, product is sold out");
 
-        // 库存阈值
-        public int RestockThreshold { get; set; }
+        var removeStock = Math.Min(AvailableStock, quantityDesired);
+        AvailableStock -= removeStock;
+        return removeStock;
+    }
 
-        // 最大库存
-        public int MaxStockThreshold { get; set; }
+    public int AddStock(int quantity)
+    {
+        if (quantity < 0) throw new CatalogDomainException(" Invalid quantity");
 
-        public int RemoveStock(int quantityDesired)
+        var original = AvailableStock;
+
+        // 如果库存超过最大库存阈值
+        if (AvailableStock + quantity > MaxStockThreshold)
         {
-            if (quantityDesired < 0)
-            {
-                throw new CatalogDomainException($"Invalid quantity {quantityDesired}");
-            }
-
-            if (AvailableStock == 0)
-            {
-                throw new CatalogDomainException("Empty stock, product is sold out");
-            }
-
-            var removeStock = Math.Min(AvailableStock, quantityDesired);
-            AvailableStock -= removeStock;
-            return removeStock;
+            var maxStockThreshold = MaxStockThreshold - AvailableStock;
+            AvailableStock = maxStockThreshold;
+            return maxStockThreshold;
         }
 
-        public int AddStock(int quantity)
-        {
-            if (quantity < 0)
-            {
-                throw new CatalogDomainException(" Invalid quantity");
-            }
-
-            var original = AvailableStock;
-
-            // 如果库存超过最大库存阈值
-            if (AvailableStock + quantity > MaxStockThreshold)
-            {
-                var maxStockThreshold = MaxStockThreshold - AvailableStock;
-                AvailableStock = maxStockThreshold;
-                return maxStockThreshold;
-            }
-
-            AvailableStock += quantity;
-            return quantity;
-        }
+        AvailableStock += quantity;
+        return quantity;
     }
 }

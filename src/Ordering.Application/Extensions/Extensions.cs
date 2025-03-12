@@ -1,19 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Ordering.Application.Extensions
+namespace Ordering.Application.Extensions;
+
+public static class Extensions
 {
-    public static class Extensions
+    public static IServiceCollection AddApplicationService(this IServiceCollection services)
     {
-        public static IServiceCollection AddApplicationService(this IServiceCollection services)
+        services.AddMediatR(cfg =>
         {
-            services.AddMediatR(cfg =>
-            {
-                var v1 = typeof(Extensions).Assembly;
-                var v2 = Assembly.GetExecutingAssembly();
-                cfg.RegisterServicesFromAssembly(typeof(Extensions).Assembly);
-            });
-            return services;
-        }
+            var v1 = typeof(Extensions).Assembly;
+            var v2 = Assembly.GetExecutingAssembly();
+            cfg.RegisterServicesFromAssembly(typeof(Extensions).Assembly);
+        });
+        return services;
     }
 }

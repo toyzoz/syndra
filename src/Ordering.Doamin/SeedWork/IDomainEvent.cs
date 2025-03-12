@@ -1,8 +1,7 @@
 ﻿using MediatR;
 
-namespace Ordering.Domain.SeedWork
+namespace Ordering.Domain.SeedWork;
+
+public interface IDomainEvent : INotification
 {
-    public interface IDomainEvent : INotification
-    {
-    }
 }
