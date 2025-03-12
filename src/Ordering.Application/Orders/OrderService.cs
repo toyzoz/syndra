@@ -11,8 +11,11 @@ namespace Ordering.Application.Orders
             var newOrder = Order.Create(order.Description);
             foreach (var item in order.OrderItems)
             {
-                newOrder.AddItem(item.ProductId, item.ProductName, item.PictureUrl,
-                    item.UnitPrice, item.Units);
+                newOrder.AddItem(
+                    item.ProductId,
+                    item.ProductName, item.PictureUrl,
+                    item.UnitPrice, item.Units
+                );
             }
 
             context.Orders.Add(newOrder);
@@ -25,6 +28,11 @@ namespace Ordering.Application.Orders
         {
             List<Order> orders = await context.Orders.Include(oi => oi.OrderItems).ToListAsync();
             return orders;
+        }
+
+        public async Task<Order?> GetAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

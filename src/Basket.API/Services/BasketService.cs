@@ -1,5 +1,6 @@
 using Basket.API.Extensions;
 using Basket.API.Models;
+using Basket.API.Repositories;
 using Grpc.Core;
 using System.Diagnostics.CodeAnalysis;
 
@@ -7,13 +8,14 @@ namespace Basket.API.Services
 {
     public class BasketService(
         IBasketRepository repository,
-        ILogger<BasketService> logger)
+        ILogger<BasketService> logger,
+        IUserIdentityService userIdentityService)
         : Basket.BasketBase
     {
         public override async Task<CustomerBasketResponse> GetBasket(GetBasketRequest request,
             ServerCallContext context)
         {
-            var userId = context.GetUserIdentity();
+            var userId = userIdentityService.GetUserIdentity();
             if (userId == null)
             {
                 return new CustomerBasketResponse();
@@ -28,7 +30,7 @@ namespace Basket.API.Services
 
             var customerBasket = await repository.GetBasketAsync(userId);
 
-            return customerBasket != null ? MapToCustomerBasketResponse(customerBasket) : new CustomerBasketResponse();
+            return MapToCustomerBasketResponse(customerBasket);
         }
 
         private static CustomerBasketResponse MapToCustomerBasketResponse(CustomerBasket customerBasket)
@@ -46,7 +48,7 @@ namespace Basket.API.Services
         public override async Task<DeleteBasketResponse> DeleteBasket(DeleteBasketRequest request,
             ServerCallContext context)
         {
-            var userId = context.GetUserIdentity();
+            var userId = userIdentityService.GetUserIdentity();
             if (userId is null)
             {
                 ThrowNotAuthenticated();
@@ -60,7 +62,7 @@ namespace Basket.API.Services
         public override async Task<CustomerBasketResponse> UpdateBasket(UpdateBasketRequest request,
             ServerCallContext context)
         {
-            var userId = context.GetUserIdentity();
+            var userId = userIdentityService.GetUserIdentity();
             if (userId == null)
             {
                 ThrowNotAuthenticated();
@@ -68,9 +70,7 @@ namespace Basket.API.Services
 
             var customerBasket = MapToCustomerBasket(userId, request);
             var updatedBasket = await repository.UpdateBasketAsync(customerBasket);
-            var customerBasketResponse = MapToCustomerBasketResponse(updatedBasket);
-
-            return customerBasketResponse;
+            return MapToCustomerBasketResponse(updatedBasket);
         }
 
         private static CustomerBasket MapToCustomerBasket(string userIdentity, UpdateBasketRequest request)

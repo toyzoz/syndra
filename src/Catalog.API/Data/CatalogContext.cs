@@ -6,9 +6,9 @@ namespace Catalog.API.Data
 {
     public class CatalogContext(DbContextOptions<CatalogContext> options) : DbContext(options)
     {
-        public DbSet<CatalogItem> CatalogItems { get; set; }
-        public DbSet<CatalogType> Types { get; set; }
-        public DbSet<CatalogBrand> Brands { get; set; }
+        public virtual DbSet<CatalogItem> CatalogItems { get; set; }
+        public virtual DbSet<CatalogType> Types { get; set; }
+        public virtual DbSet<CatalogBrand> Brands { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

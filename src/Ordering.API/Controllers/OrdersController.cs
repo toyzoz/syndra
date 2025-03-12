@@ -23,11 +23,28 @@ namespace Ordering.API.Controllers
             return TypedResults.Ok(orders);
         }
 
+        [HttpGet("{id}")]
+        public async Task<Ok<Order>> GetAsync(int id)
+        {
+            var order = await service.GetAsync(id);
+            
+            return TypedResults.Ok(order);
+        }
+
+
         [HttpPost]
         public async Task<Created> CreateAsync(Order order)
         {
             var result = await service.CreateOrderAsync(order);
             return TypedResults.Created($"/orders/{result.Id}");
         }
+    }
+    
+    // 创建订单输入
+    public class CreateOrder
+    {
+        // 买家
+        
+            
     }
 }

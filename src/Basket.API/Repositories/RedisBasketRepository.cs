@@ -1,7 +1,8 @@
+using Basket.API.Models;
 using StackExchange.Redis;
 using System.Text.Json;
 
-namespace Basket.API.Models
+namespace Basket.API.Repositories
 {
     public class RedisBasketRepository(
         IConnectionMultiplexer multiplexer,
@@ -10,20 +11,20 @@ namespace Basket.API.Models
         private static readonly RedisKey BasketKeyPrefix = "basket"u8.ToArray();
         private IDatabase Database => multiplexer.GetDatabase();
 
-        public async Task<CustomerBasket?> GetBasketAsync(string customerId)
+        public async Task<CustomerBasket> GetBasketAsync(string customerId)
         {
             using var data = await Database.StringGetLeaseAsync(GetBasketKey(customerId));
-            return data is null ? null : JsonSerializer.Deserialize<CustomerBasket>(data.Span);
+            return data is null ? new CustomerBasket() : JsonSerializer.Deserialize<CustomerBasket>(data.Span)!;
         }
 
-        public async Task<CustomerBasket?> UpdateBasketAsync(CustomerBasket basket)
+        public async Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basket)
         {
             var json = JsonSerializer.SerializeToUtf8Bytes(basket);
             var created = await Database.StringSetAsync(GetBasketKey(basket.BuyerId), json);
             if (!created)
             {
                 logger.LogInformation("Problem occurred persisting the item.");
-                return null;
+                await GetBasketAsync(basket.BuyerId);
             }
 
             logger.LogInformation("Basket item persisted successfully.");

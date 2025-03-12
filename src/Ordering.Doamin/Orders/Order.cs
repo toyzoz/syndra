@@ -14,9 +14,8 @@ namespace Ordering.Domain.Orders
             Description = description;
         }
 
-        public string Description { get; private set; } = default!;
+        public string Description { get; private set; } = null!;
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
-
 
         public static Order Create(string description)
         {
@@ -27,7 +26,8 @@ namespace Ordering.Domain.Orders
             return order;
         }
 
-        public void AddItem(int productId,
+        public void AddItem(
+            int productId,
             string productName,
             string productPicUrl,
             decimal unitPrice,
