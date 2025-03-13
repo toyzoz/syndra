@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Ordering.Application.Commands.Cancel;
+using Ordering.Application.Commands.Create;
+using Ordering.Application.Commands.Ship;
 using Ordering.Application.Orders;
-using Ordering.Domain.Events;
 using Ordering.Domain.Orders;
 
 namespace Ordering.API.Controllers;
@@ -14,34 +16,39 @@ public class OrdersController(
     IMediator mediator) : ControllerBase
 {
     [HttpGet]
-    public async Task<Ok<List<Order>>> GetListAsync()
+    public async Task<Ok<List<Order>>> GetListByUserAsync()
     {
-        var orders = await service.GetListAsync();
-
-        await mediator.Publish(new OrderQueryDomainEvent(DateTime.Now));
-
-        return TypedResults.Ok(orders);
+        throw new NotImplementedException();
     }
 
-    [HttpGet("{id}")]
-    public async Task<Ok<Order>> GetAsync(int id)
+    [HttpGet("{id:int}")]
+    public async Task<Ok<Order>> GetByIdAsync(int id)
     {
-        var order = await service.GetAsync(id);
-
-        return TypedResults.Ok(order);
+        throw new NotImplementedException();
     }
 
 
     [HttpPost]
-    public async Task<Created> CreateAsync(Order order)
+    public async Task<Created> CreateAsync(CreateOrderCommand command)
     {
-        var result = await service.CreateOrderAsync(order);
-        return TypedResults.Created($"/orders/{result.Id}");
+        throw new NotImplementedException();
     }
-}
 
-// 创建订单输入
-public class CreateOrder
-{
-    // 买家
+    [HttpPost]
+    public async Task<Created> CreateDraftAsync(Order order)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpPut($"{{id:int}}")]
+    public async Task CancelAsync(CancelOrderCommand command)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpPut($"{{id:int}}")]
+    public async Task ShipAsync(ShipOrderCommand command)
+    {
+        throw new NotImplementedException();
+    }
 }

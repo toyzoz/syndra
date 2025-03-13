@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ordering.Infrastructure.Migrations
 {
@@ -18,10 +18,7 @@ namespace Ordering.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Orders", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "OrderItems",

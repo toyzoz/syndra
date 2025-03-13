@@ -7,7 +7,7 @@ using Ordering.Infrastructure.Extensions;
 
 namespace Ordering.Infrastructure.Data;
 
-public class OrderContext(DbContextOptions<OrderContext> options, IMediator mediator)
+public class OrderingContext(DbContextOptions<OrderingContext> options, IMediator mediator)
     : DbContext(options), IApplicationContext
 {
     public DbSet<Order> Orders { get; set; }

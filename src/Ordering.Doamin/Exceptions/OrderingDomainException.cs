@@ -1,6 +1,6 @@
-﻿namespace Ordering.Domain.Orders;
+﻿namespace Ordering.Domain.Exceptions;
 
-internal class OrderingDomainException : Exception
+public class OrderingDomainException : Exception
 {
     public OrderingDomainException()
     {

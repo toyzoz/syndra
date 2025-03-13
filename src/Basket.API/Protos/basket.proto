@@ -11,7 +11,6 @@ service Basket {
 }
 
 message GetBasketRequest{
-
 }
 message CustomerBasketResponse{
   repeated BaskItem items = 1;

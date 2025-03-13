@@ -14,12 +14,12 @@ public static class Extensions
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddDbContext<OrderContext>(options =>
+        services.AddDbContext<OrderingContext>(options =>
         {
             options.UseSqlServer(configuration.GetConnectionString("Database"));
         });
 
-        services.AddScoped<IApplicationContext, OrderContext>();
+        services.AddScoped<IApplicationContext, OrderingContext>();
 
         return services;
     }
@@ -27,13 +27,13 @@ public static class Extensions
     public static async Task ApplyMigrationsAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<OrderContext>();
+        var context = scope.ServiceProvider.GetRequiredService<OrderingContext>();
         await context.Database.MigrateAsync();
     }
 
 
     public static async Task DispatchDomainEventsAsync(this IMediator mediator,
-        OrderContext context)
+        OrderingContext context)
     {
         var aggregateEntries = context.ChangeTracker.Entries<AggregateRoot>();
 

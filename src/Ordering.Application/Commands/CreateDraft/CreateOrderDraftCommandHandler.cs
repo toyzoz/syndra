@@ -1,0 +1,27 @@
+using MediatR;
+using Ordering.Application.Extensions;
+using Ordering.Domain.Orders;
+
+namespace Ordering.Application.Commands.CreateDraft;
+
+public class CreateOrderDraftCommandHandler
+    : IRequestHandler<CreateOrderDraftCommand, OrderDraftDto>
+{
+    public Task<OrderDraftDto> Handle(CreateOrderDraftCommand request, CancellationToken cancellationToken)
+    {
+        var draftOrder = Order.NewDraft();
+        var orderItemDtos = request.Items.Select(i => i.ToOrderItemDto()).ToList();
+
+        foreach (var item in orderItemDtos)
+        {
+            draftOrder.AddItem(item.ProductId,
+                item.ProductName,
+                item.PictureUrl,
+                item.UnitPrice,
+                item.Units,
+                item.Discount);
+        }
+
+        return Task.FromResult(OrderDraftDto.FromOrder(draftOrder));
+    }
+}
