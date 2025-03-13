@@ -9,10 +9,7 @@ public class ShipOrderCommandHandler(IOrderRepository repository) : IRequestHand
     {
         var order = await repository.GetByIdAsync(request.OrderNumber);
 
-        if (order is null)
-        {
-            return false;
-        }
+        if (order is null) return false;
 
         order.SetShippedStatus();
 

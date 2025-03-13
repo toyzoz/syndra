@@ -13,14 +13,12 @@ public class CreateOrderDraftCommandHandler
         var orderItemDtos = request.Items.Select(i => i.ToOrderItemDto()).ToList();
 
         foreach (var item in orderItemDtos)
-        {
             draftOrder.AddItem(item.ProductId,
                 item.ProductName,
                 item.PictureUrl,
                 item.UnitPrice,
                 item.Units,
                 item.Discount);
-        }
 
         return Task.FromResult(OrderDraftDto.FromOrder(draftOrder));
     }

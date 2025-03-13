@@ -28,5 +28,5 @@ app.Run();
 
 namespace Catalog.API
 {
-    public partial class Program;
+    public class Program;
 }

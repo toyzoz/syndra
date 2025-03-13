@@ -3,24 +3,23 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ordering.Application;
 using Ordering.Application.Data;
 using Ordering.Domain.SeedWork;
 using Ordering.Infrastructure.Data;
+using Ordering.Infrastructure.Idempotency;
 
 namespace Ordering.Infrastructure.Extensions;
 
 public static class Extensions
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
+    public static IServiceCollection AddDatabase(this IServiceCollection services,
         IConfiguration configuration)
     {
         services.AddDbContext<OrderingContext>(options =>
         {
             options.UseSqlServer(configuration.GetConnectionString("Database"));
         });
-
-        services.AddScoped<IApplicationContext, OrderingContext>();
-
         return services;
     }
 

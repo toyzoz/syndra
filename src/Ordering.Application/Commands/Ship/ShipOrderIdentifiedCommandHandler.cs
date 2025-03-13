@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Commands.Identified;
-using Ordering.Infrastructure.Idempotency;
 
 namespace Ordering.Application.Commands.Ship;
 

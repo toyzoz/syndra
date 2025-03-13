@@ -25,11 +25,10 @@ public class ValidatorBehavior<TRequest, TResponse>(
             .ToList();
 
         if (failures.Count != 0)
-        {
             logger.LogWarning("Validation errors - {CommandType} - Command: {@Command} - Errors: {@ValidationErrors}",
                 typeName, request, failures);
-        }
 
         return await next();
     }
 }
+

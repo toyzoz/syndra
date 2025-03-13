@@ -14,10 +14,8 @@ public class CreateOrderCommandHandler(IOrderRepository repository) : IRequestHa
         var address = new Address(request.Street, request.City, request.State, request.Country, request.ZipCode);
         var order = new Order(address);
 
-        foreach (var item in request.OrderItems)
-        {
+        foreach (var item in request.Items)
             order.AddItem(item.ProductId, item.ProductName, item.PictureUrl, item.UnitPrice, item.Units, item.Discount);
-        }
 
         await repository.AddAsync(order);
 

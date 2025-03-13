@@ -9,11 +9,10 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services
-    .AddApiService()
+    .AddApplicationServices(builder.Configuration)
     .AddApplicationService()
-    .AddInfrastructureServices(builder.Configuration);
+    .AddDatabase(builder.Configuration);
 
-builder.Services.AddMediatR(configuration => { configuration.RegisterServicesFromAssembly(typeof(Program).Assembly); });
 
 var app = builder.Build();
 
@@ -25,7 +24,9 @@ if (app.Environment.IsDevelopment())
 
 await app.ApplyMigrationsAsync();
 
-app.UseAuthorization();
+// app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program;

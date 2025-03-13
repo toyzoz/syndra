@@ -6,7 +6,7 @@ namespace Ordering.Application.Commands.Create;
 
 public record CreateOrderCommand : IRequest<bool>
 {
-    public readonly List<OrderItemDto> OrderItems;
+    public readonly List<OrderItemDto> Items;
 
     public CreateOrderCommand(List<BasketItem> basketItems,
         string userId,
@@ -35,7 +35,7 @@ public record CreateOrderCommand : IRequest<bool>
         CardSecurityNumber = cardSecurityNumber;
         CardTypeId = cardTypeId;
 
-        OrderItems = basketItems.Select(i => i.ToOrderItemDto()).ToList();
+        Items = basketItems.Select(i => i.ToOrderItemDto()).ToList();
     }
 
     public string UserId { get; private set; }

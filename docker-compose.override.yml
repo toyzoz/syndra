@@ -16,8 +16,8 @@ services:
       - SA_PASSWORD=Password123
     ports:
       - "1433:1433"
-    volumes:
-      - catalogdb_data:/var/opt/mssql
+#    volumes:
+#      - catalogdb_data:/var/opt/mssql
 
   ordering.api:
     environment:
@@ -36,6 +36,26 @@ services:
       - SA_PASSWORD=Password123
     ports:
       - "1434:1433"
-    volumes:
-      - orderingdb_data:/var/opt/mssql
+#    volumes:
+#      - orderingdb_data:/var/opt/mssql
 
+
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Redis=basketdb:6379
+    ports:
+      - "8080"
+      - "8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  basketdb:
+    restart: always
+    ports:
+      - "6379:6379"

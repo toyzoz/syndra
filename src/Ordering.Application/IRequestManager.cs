@@ -1,4 +1,4 @@
-namespace Ordering.Infrastructure.Idempotency;
+namespace Ordering.Application;
 
 public interface IRequestManager
 {

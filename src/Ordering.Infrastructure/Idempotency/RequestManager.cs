@@ -1,3 +1,4 @@
+using Ordering.Application;
 using Ordering.Domain.Exceptions;
 using Ordering.Infrastructure.Data;
 
@@ -13,10 +14,7 @@ public class RequestManager(OrderingContext context) : IRequestManager
 
     public async Task CreateRequestForCommandAsync<T>(Guid id)
     {
-        if (await ExistAsync(id))
-        {
-            throw new OrderingDomainException($"Request {id} already exists.");
-        }
+        if (await ExistAsync(id)) throw new OrderingDomainException($"Request {id} already exists.");
 
         var clientRequest = new ClientRequest
         {

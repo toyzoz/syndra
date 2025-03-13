@@ -4,7 +4,6 @@ using Ordering.Application.Commands.Cancel;
 using Ordering.Application.Commands.Create;
 using Ordering.Application.Commands.Ship;
 using Ordering.Application.Extensions;
-using Ordering.Infrastructure.Idempotency;
 
 namespace Ordering.Application.Commands.Identified;
 
@@ -19,10 +18,7 @@ public abstract class IdentifiedCommandHandler<T, R>(
         IdentifiedCommand<T, R> request,
         CancellationToken cancellationToken)
     {
-        if (await requestManager.ExistAsync(request.Id))
-        {
-            return CreateResultForDuplicateRequest();
-        }
+        if (await requestManager.ExistAsync(request.Id)) return CreateResultForDuplicateRequest();
 
         await requestManager.CreateRequestForCommandAsync<T>(request.Id);
 

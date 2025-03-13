@@ -2,16 +2,20 @@ using System.Reflection;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Data;
+using Ordering.Domain.Buyers;
 using Ordering.Domain.Orders;
 using Ordering.Infrastructure.Extensions;
 
 namespace Ordering.Infrastructure.Data;
 
-public class OrderingContext(DbContextOptions<OrderingContext> options, IMediator mediator)
+public class OrderingContext(
+    DbContextOptions<OrderingContext> options,
+    IMediator mediator)
     : DbContext(options), IApplicationContext
 {
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<CardType> CardTypes { get; set; }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

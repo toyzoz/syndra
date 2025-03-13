@@ -20,6 +20,20 @@ services:
     image: mcr.microsoft.com/mssql/server
 
 
-volumes:
-  catalogdb_data:
-  orderingdb_data:
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: src/Basket.API/Dockerfile
+    depends_on:
+      - basketdb  
+      
+      
+  basketdb:    
+    image: redis
+     
+      
+#volumes:
+#  catalogdb_data:
+#  orderingdb_data:      
+

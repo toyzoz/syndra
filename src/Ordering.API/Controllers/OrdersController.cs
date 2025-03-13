@@ -3,8 +3,12 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Commands.Cancel;
 using Ordering.Application.Commands.Create;
+using Ordering.Application.Commands.CreateDraft;
+using Ordering.Application.Commands.Identified;
 using Ordering.Application.Commands.Ship;
 using Ordering.Application.Orders;
+using Ordering.Application.Queries;
+using Ordering.Application.Queries.ViewModels;
 using Ordering.Domain.Orders;
 
 namespace Ordering.API.Controllers;
@@ -13,42 +17,69 @@ namespace Ordering.API.Controllers;
 [Route("[controller]")]
 public class OrdersController(
     OrderService service,
-    IMediator mediator) : ControllerBase
+    IMediator sender,
+    IOrderQuery orderQuery,
+    ILogger<OrdersController> logger) : ControllerBase
 {
     [HttpGet]
-    public async Task<Ok<List<Order>>> GetListByUserAsync()
+    public async Task<Ok<IEnumerable<Order>>> GetListByUserAsync()
     {
-        throw new NotImplementedException();
+        var user = "bob";
+
+        var result = await orderQuery.GetOrderByUserAsync(user);
+        return TypedResults.Ok(result);
     }
 
     [HttpGet("{id:int}")]
     public async Task<Ok<Order>> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var result = await orderQuery.GetOrderByIdAsync(id);
+        return TypedResults.Ok(result);
+    }
+
+    [HttpGet("card-type")]
+    public async Task<Ok<List<CardTypeOutput>>> GetCardTypesAsync()
+    {
+        var result = await orderQuery.GetCardTypesAsync();
+        return TypedResults.Ok(result);
     }
 
 
     [HttpPost]
-    public async Task<Created> CreateAsync(CreateOrderCommand command)
+    public async Task<Ok> CreateAsync(CreateOrderCommand request)
     {
-        throw new NotImplementedException();
+        // todo: requestId
+        var requestId = Guid.NewGuid();
+        var identifiedCommand = new IdentifiedCommand<CreateOrderCommand, bool>(requestId, request);
+        var result = await sender.Send(identifiedCommand);
+
+        if (result)
+            logger.LogInformation("CreateOrderCommand succeeded - RequestId: {RequestId}", requestId);
+        else
+            logger.LogWarning("CreateOrderCommand failed - RequestId: {RequestId}", requestId);
+
+        return TypedResults.Ok();
     }
 
-    [HttpPost]
-    public async Task<Created> CreateDraftAsync(Order order)
+    [HttpPost("draft")]
+    public async Task<OrderDraftDto> CreateDraftAsync(CreateOrderDraftCommand request)
     {
-        throw new NotImplementedException();
+        return await sender.Send(request);
     }
 
-    [HttpPut($"{{id:int}}")]
-    public async Task CancelAsync(CancelOrderCommand command)
+    [HttpPut("cancel")]
+    public async Task<Ok<bool>> CancelAsync(CancelOrderCommand command)
     {
-        throw new NotImplementedException();
+        var request = new IdentifiedCommand<CancelOrderCommand, bool>(Guid.NewGuid(), command);
+        var result = await sender.Send(request);
+        return TypedResults.Ok(result);
     }
 
-    [HttpPut($"{{id:int}}")]
-    public async Task ShipAsync(ShipOrderCommand command)
+    [HttpPut("ship")]
+    public async Task<Ok<bool>> ShipAsync(ShipOrderCommand command)
     {
-        throw new NotImplementedException();
+        var request = new IdentifiedCommand<ShipOrderCommand, bool>(Guid.NewGuid(), command);
+        var result = await sender.Send(request);
+        return TypedResults.Ok(result);
     }
 }
