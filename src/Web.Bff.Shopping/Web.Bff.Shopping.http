@@ -1,0 +1,6 @@
+@Web.Bff.Shopping_HostAddress = http://localhost:5168
+
+GET {{Web.Bff.Shopping_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

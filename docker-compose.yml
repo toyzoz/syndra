@@ -37,3 +37,14 @@ services:
 #  catalogdb_data:
 #  orderingdb_data:      
 
+
+  web.bff.shopping:
+    image: ${DOCKER_REGISTRY-}webbffshopping
+    build:
+      context: .
+      dockerfile: src/Web.Bff.Shopping/Dockerfile
+    depends_on:
+      - catalog.api
+      - ordering.api
+      - basket.api
+
