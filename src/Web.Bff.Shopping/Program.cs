@@ -1,12 +1,24 @@
+using Microsoft.AspNetCore.RateLimiting;
 using Yarp.ReverseProxy.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddRateLimiter(rateLimiterOptions =>
+{
+    rateLimiterOptions.AddFixedWindowLimiter("fixed", options =>
+    {
+        options.Window = TimeSpan.FromSeconds(10);
+        options.PermitLimit = 5;
+    });
+});
+
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder => builder
+    options.AddPolicy("AllowAll", builder => 
+    builder
     .AllowAnyOrigin()
     .AllowAnyMethod()
     .AllowAnyHeader());
@@ -14,7 +26,9 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
-    .AddServiceDiscoveryDestinationResolver();
+    //.AddServiceDiscoveryDestinationResolver()
+    ;
+
 
 var app = builder.Build();
 
