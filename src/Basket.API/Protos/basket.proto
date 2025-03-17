@@ -1,11 +1,16 @@
 syntax = "proto3";
 
 option csharp_namespace = "Basket.API";
+import "google/api/annotations.proto";
 
 package BasketApi;
 
 service Basket {
-  rpc GetBasket (GetBasketRequest) returns (CustomerBasketResponse);
+  rpc GetBasket (GetBasketRequest) returns (CustomerBasketResponse){
+	  option(google.api.http)={
+		get: "/api/basket"
+	  };
+  };
   rpc DeleteBasket (DeleteBasketRequest) returns (DeleteBasketResponse);
   rpc UpdateBasket (UpdateBasketRequest) returns (CustomerBasketResponse);
 }

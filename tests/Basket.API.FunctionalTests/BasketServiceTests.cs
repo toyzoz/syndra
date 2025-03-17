@@ -10,7 +10,9 @@ public class BasketServiceTests(IntegrationTestWebAppFactory factory)
     [Fact]
     public void Test1()
     {
-        // new Basket.BasketClient(
-        //     GrpcChannel.ForAddress("http://localhost:5000"));
+        using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+
+        var client = new Basket.BasketClient(channel);
+
     }
 }
