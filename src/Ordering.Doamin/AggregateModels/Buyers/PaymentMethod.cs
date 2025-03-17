@@ -6,13 +6,8 @@ public class PaymentMethod
     {
     }
 
-    public PaymentMethod(
-        string alias,
-        string cardNumber,
-        string securityNumber,
-        string cardHolderName,
-        DateTime expiration,
-        int cardTypeId)
+    private PaymentMethod(string alias, string cardNumber, string securityNumber, string cardHolderName,
+        DateTime expiration, int cardTypeId)
     {
         if (expiration <= DateTime.UtcNow) throw new ArgumentException("Expiration date must be in the future.");
 
@@ -33,6 +28,12 @@ public class PaymentMethod
         CardHolderName = cardHolderName;
         Expiration = expiration;
         CardTypeId = cardTypeId;
+    }
+
+    public static PaymentMethod Create(string alias, string cardNumber, string securityNumber,
+        string cardHolderName, DateTime expiration, int cardTypeId)
+    {
+        return new PaymentMethod(alias, cardNumber, securityNumber, cardHolderName, expiration, cardTypeId);
     }
 
     // 别名

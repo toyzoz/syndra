@@ -15,9 +15,9 @@ public class CreateOrderCommandHandler(
         OrderStartedIntegrationEvent? orderStartedIntegrationEvent = new(request.UserId);
         await integrationEventService.AddEventAsync(orderStartedIntegrationEvent);
 
-        Address address = new(request.Street, request.City, request.State, request.Country, request.ZipCode);
+        Address address = Address.Create(request.Street, request.City, request.State, request.Country, request.ZipCode);
 
-        Order order = new(address, request.UserId);
+        Order order = Order.Create(address, request.UserId);
 
         foreach (var item in request.Items)
             order.AddOrderItem(item.ProductId, item.ProductName, item.PictureUrl, item.UnitPrice, item.Units,

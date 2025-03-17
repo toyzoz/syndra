@@ -13,9 +13,14 @@ public class Order : AggregateRoot
     {
     }
 
-    public Order(Address address, string buyerId)
+    private Order(Address address, string buyerId)
     {
         Address = address;
+    }
+
+    public static Order Create(Address address, string buyerId)
+    {
+        return new Order(address, buyerId);
     }
 
     public int? BuyerId { get; private set; }
