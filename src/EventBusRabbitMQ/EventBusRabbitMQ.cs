@@ -1,6 +1,6 @@
 namespace EventBusRabbitMQ;
 
-public class RabbitMqEventBus /*: IEventBus*/
+public class RabbitMQEventBus /*: IEventBus*/
 {
     // private readonly string exchangeName = "eshop_event_bus";
     // public async Task PublishAsync(IntegrationEvent @event)
