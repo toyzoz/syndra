@@ -17,7 +17,7 @@ public static class CatalogContextDataSeed
 
             // Seed CatalogType
             context.Types.RemoveRange(context.Types);
-            IEnumerable<CatalogType> types = catalogSourceEntry.Select(i => i.Type).Distinct()
+            var types = catalogSourceEntry.Select(i => i.Type).Distinct()
                 .Select(t => new CatalogType { Type = t });
             await context.Types.AddRangeAsync(types);
             await context.SaveChangesAsync();
@@ -37,7 +37,7 @@ public static class CatalogContextDataSeed
             var brandDic = context.Brands.ToDictionary(x => x.Brand, x => x.Id);
 
             context.CatalogItems.RemoveRange(context.CatalogItems);
-            IEnumerable<CatalogItem> catalogItems = catalogSourceEntry.Select(i => new CatalogItem
+            var catalogItems = catalogSourceEntry.Select(i => new CatalogItem
             {
                 Id = 0,
                 Name = i.Name,
