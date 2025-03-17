@@ -18,17 +18,17 @@ public class Order : AggregateRoot
         Address = address;
     }
 
-    public static Order Create(Address address, string buyerId)
-    {
-        return new Order(address, buyerId);
-    }
-
     public int? BuyerId { get; private set; }
     public Address Address { get; private set; } = null!;
     public DateTime OrderDate { get; private set; }
     public OrderStatus OrderStatus { get; private set; }
     public string Description { get; private set; } = null!;
     public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
+
+    public static Order Create(Address address, string buyerId)
+    {
+        return new Order(address, buyerId);
+    }
 
     public static Order NewDraft()
     {
@@ -42,7 +42,7 @@ public class Order : AggregateRoot
         var existingProduct = _orderItems.SingleOrDefault(oi => oi.ProductId == productId);
         if (existingProduct is null)
         {
-            OrderItem orderItem = new(productId, productName, productPicUrl, unitPrice, units, discount);
+            var orderItem = OrderItem.Create(productId, productName, productPicUrl, unitPrice, units, discount);
             _orderItems.Add(orderItem);
         }
         else

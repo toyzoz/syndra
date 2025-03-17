@@ -11,14 +11,14 @@ public record Address
         this.ZipCode = ZipCode;
     }
 
-    public static Address Create(string street, string city, string state, string country, string zipCode)
-    {
-        return new Address(street, city, state, country, zipCode);
-    }
-
     public string Street { get; init; }
     public string City { get; init; }
     public string State { get; init; }
     public string Country { get; init; }
     public string ZipCode { get; init; }
+
+    public static Address Create(string street, string city, string state, string country, string zipCode)
+    {
+        return new Address(street, city, state, country, zipCode);
+    }
 }

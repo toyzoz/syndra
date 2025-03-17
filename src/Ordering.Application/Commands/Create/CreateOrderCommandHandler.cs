@@ -15,13 +15,14 @@ public class CreateOrderCommandHandler(
         OrderStartedIntegrationEvent? orderStartedIntegrationEvent = new(request.UserId);
         await integrationEventService.AddEventAsync(orderStartedIntegrationEvent);
 
-        Address address = Address.Create(request.Street, request.City, request.State, request.Country, request.ZipCode);
+        var address = Address.Create(request.Street, request.City, request.State, request.Country, request.ZipCode);
 
-        Order order = Order.Create(address, request.UserId);
+        var order = Order.Create(address, request.UserId);
 
         foreach (var item in request.Items)
             order.AddOrderItem(item.ProductId, item.ProductName, item.PictureUrl, item.UnitPrice, item.Units,
                 item.Discount);
+
 
         logger.LogInformation("create order -order: {order}", order);
         await repository.AddAsync(order);

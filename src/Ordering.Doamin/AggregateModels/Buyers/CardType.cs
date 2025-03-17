@@ -2,9 +2,6 @@ namespace Ordering.Domain.AggregateModels.Buyers;
 
 public class CardType
 {
-    public int Id { get;private set; }
-    public string Name { get; private set; } = null!;
-
     private CardType()
     {
     }
@@ -14,6 +11,9 @@ public class CardType
         Id = id;
         Name = name;
     }
+
+    public int Id { get; private set; }
+    public string Name { get; private set; } = null!;
 
     public static CardType CreateInstance(int id, string name)
     {

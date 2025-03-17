@@ -1,3 +1,4 @@
+using System.Collections;
 using System.ComponentModel;
 using Catalog.API.Data;
 using Catalog.API.Models;
@@ -32,7 +33,7 @@ public class ItemsController(
         var count = await root.LongCountAsync();
         var pageSize = request.PageSize;
         var pageIndex = request.PageIndex;
-        List<CatalogItem> catalogItems = await root
+        IEnumerable catalogItems = await root
             .OrderBy(i => i.Name)
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
@@ -85,8 +86,8 @@ public class ItemsController(
     [HttpGet("{ids}")]
     public async Task<Ok<List<CatalogItem>>> GetByIdsAsync(int[] ids)
     {
-        List<CatalogItem>? catalogItem = await context.CatalogItems.Where(x => ids.Contains(x.Id)).ToListAsync();
-        return TypedResults.Ok(catalogItem);
+        var catalogItems = await context.CatalogItems.Where(x => ids.Contains(x.Id)).ToListAsync();
+        return TypedResults.Ok(catalogItems);
     }
 
     [HttpPut("{id:int}")]

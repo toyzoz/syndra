@@ -1,9 +1,3 @@
-using EventBus;
-
-using RabbitMQ.Client;
-using System.Text;
-using System.Text.Json;
-
 namespace EventBusRabbitMQ;
 
 public class RabbitMqEventBus /*: IEventBus*/

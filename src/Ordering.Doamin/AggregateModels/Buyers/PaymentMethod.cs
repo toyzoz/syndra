@@ -30,12 +30,6 @@ public class PaymentMethod
         CardTypeId = cardTypeId;
     }
 
-    public static PaymentMethod Create(string alias, string cardNumber, string securityNumber,
-        string cardHolderName, DateTime expiration, int cardTypeId)
-    {
-        return new PaymentMethod(alias, cardNumber, securityNumber, cardHolderName, expiration, cardTypeId);
-    }
-
     // 别名
     private string Alias { get; set; } = null!;
 
@@ -53,6 +47,12 @@ public class PaymentMethod
 
     public int CardTypeId { get; set; }
     public CardType? CardType { get; set; }
+
+    public static PaymentMethod Create(string alias, string cardNumber, string securityNumber,
+        string cardHolderName, DateTime expiration, int cardTypeId)
+    {
+        return new PaymentMethod(alias, cardNumber, securityNumber, cardHolderName, expiration, cardTypeId);
+    }
 
     public bool IsEqualTo(int cardTypeId, string cardNumber, DateTime expiration)
     {

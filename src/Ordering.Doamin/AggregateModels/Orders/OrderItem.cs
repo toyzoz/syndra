@@ -9,7 +9,7 @@ public class OrderItem : Entity
     {
     }
 
-    public OrderItem(int productId,
+    private OrderItem(int productId,
         string productName,
         string productPicUrl,
         decimal unitPrice,
@@ -30,6 +30,12 @@ public class OrderItem : Entity
     public decimal UnitPrice { get; private set; }
     public decimal Discount { get; private set; }
     public int Units { get; private set; }
+
+    public static OrderItem Create(int productId, string productName, string productPicUrl, decimal unitPrice,
+        int units, decimal discount)
+    {
+        return new OrderItem(productId, productName, productPicUrl, unitPrice, units, discount);
+    }
 
     internal void AddUnits(int units)
     {

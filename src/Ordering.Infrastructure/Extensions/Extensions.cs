@@ -1,3 +1,4 @@
+using System.Collections;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,7 @@ public static class Extensions
         IEnumerable<EntityEntry<AggregateRoot>>? hasEventEntity = aggregateEntries
             .Where(x => x.Entity.DomainEvents.Count != 0);
 
-        List<IDomainEvent>? domainEvents = hasEventEntity
+        IEnumerable? domainEvents = hasEventEntity
             .SelectMany(e => e.Entity.DomainEvents)
             .ToList();
 

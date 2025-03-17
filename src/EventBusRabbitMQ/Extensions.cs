@@ -1,5 +1,3 @@
-using EventBus;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace EventBusRabbitMQ;
