@@ -13,7 +13,7 @@ public class BrandsController(CatalogContext context) : ControllerBase
     [HttpGet]
     public async Task<Ok<List<CatalogBrand>>> GetListAsync()
     {
-        var catalogBrands = await context.Brands.OrderBy(x => x.Brand).ToListAsync();
+        List<CatalogBrand>? catalogBrands = await context.Brands.OrderBy(x => x.Brand).ToListAsync();
         return TypedResults.Ok(catalogBrands);
     }
 }

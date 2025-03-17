@@ -2,8 +2,8 @@ using System.Reflection;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Data;
-using Ordering.Domain.Buyers;
-using Ordering.Domain.Orders;
+using Ordering.Domain.AggregateModels.Buyers;
+using Ordering.Domain.AggregateModels.Orders;
 using Ordering.Infrastructure.Extensions;
 
 namespace Ordering.Infrastructure.Data;
@@ -13,6 +13,7 @@ public class OrderingContext(
     IMediator mediator)
     : DbContext(options), IApplicationContext
 {
+    public DbSet<Buyer> Buyers { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<CardType> CardTypes { get; set; }
@@ -24,8 +25,6 @@ public class OrderingContext(
         return await base.SaveChangesAsync(cancellationToken);
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-    }
 }

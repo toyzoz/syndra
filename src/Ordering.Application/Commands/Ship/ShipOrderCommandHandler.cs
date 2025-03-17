@@ -1,5 +1,5 @@
 using MediatR;
-using Ordering.Domain.Orders;
+using Ordering.Domain.AggregateModels.Orders;
 
 namespace Ordering.Application.Commands.Ship;
 
@@ -7,9 +7,12 @@ public class ShipOrderCommandHandler(IOrderRepository repository) : IRequestHand
 {
     public async Task<bool> Handle(ShipOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = await repository.GetByIdAsync(request.OrderNumber);
+        Order? order = await repository.GetByIdAsync(request.OrderNumber);
 
-        if (order is null) return false;
+        if (order is null)
+        {
+            return false;
+        }
 
         order.SetShippedStatus();
 

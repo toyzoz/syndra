@@ -17,7 +17,7 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
         logger.LogInformation("Handling command {CommandName} ({@Command})",
             request.GetGenericTypeName(),
             request);
-        var response = await next();
+        TResponse? response = await next();
         logger.LogInformation("Command {CommandName} handled - response: {@Response}",
             request.GetGenericTypeName(),
             response);

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ordering.Domain.Orders;
+using Ordering.Domain.AggregateModels.Orders;
 
 namespace Ordering.Infrastructure.Data.EntityTypeConfigurations;
 

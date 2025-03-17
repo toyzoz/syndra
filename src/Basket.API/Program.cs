@@ -1,18 +1,18 @@
 using Basket.API.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddGrpc()
 // .AddJsonTranscoding()
-;
+    ;
 
 // builder.Services.AddSwaggerGen(c =>
 // {
 //     c.SwaggerDoc("v1", new() { Title = "Basket.API", Version = "v1" });
 // });
 
-var app = builder.Build();
+WebApplication? app = builder.Build();
 
 // if (app.Environment.IsDevelopment())
 // {

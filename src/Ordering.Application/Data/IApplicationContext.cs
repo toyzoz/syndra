@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ordering.Domain.Buyers;
-using Ordering.Domain.Orders;
+using Ordering.Domain.AggregateModels.Buyers;
+using Ordering.Domain.AggregateModels.Orders;
 
 namespace Ordering.Application.Data;
 

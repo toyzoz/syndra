@@ -13,14 +13,14 @@ public class RedisBasketRepository(
 
     public async Task<CustomerBasket> GetBasketAsync(string customerId)
     {
-        using var data = await Database.StringGetLeaseAsync(GetBasketKey(customerId));
+        using Lease<byte>? data = await Database.StringGetLeaseAsync(GetBasketKey(customerId));
         return data is null ? new CustomerBasket() : JsonSerializer.Deserialize<CustomerBasket>(data.Span)!;
     }
 
     public async Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basket)
     {
-        var json = JsonSerializer.SerializeToUtf8Bytes(basket);
-        var created = await Database.StringSetAsync(GetBasketKey(basket.BuyerId), json);
+        byte[]? json = JsonSerializer.SerializeToUtf8Bytes(basket);
+        bool created = await Database.StringSetAsync(GetBasketKey(basket.BuyerId), json);
         if (!created)
         {
             logger.LogInformation("Problem occurred persisting the item.");
@@ -31,13 +31,7 @@ public class RedisBasketRepository(
         return await GetBasketAsync(basket.BuyerId);
     }
 
-    public async Task<bool> DeleteBasketAsync(string id)
-    {
-        return await Database.KeyDeleteAsync(GetBasketKey(id));
-    }
+    public async Task<bool> DeleteBasketAsync(string id) => await Database.KeyDeleteAsync(GetBasketKey(id));
 
-    private static RedisKey GetBasketKey(string userId)
-    {
-        return BasketKeyPrefix.Append(userId);
-    }
+    private static RedisKey GetBasketKey(string userId) => BasketKeyPrefix.Append(userId);
 }

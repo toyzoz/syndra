@@ -1,5 +1,5 @@
 using Ordering.Application.Queries.ViewModels;
-using Ordering.Domain.Orders;
+using Ordering.Domain.AggregateModels.Orders;
 
 namespace Ordering.Application.Queries;
 

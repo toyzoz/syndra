@@ -17,23 +17,15 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             .WithPassword("Password123")
             .Build();
 
-    public async Task InitializeAsync()
-    {
-        await _dbContainer.StartAsync();
-    }
+    public async Task InitializeAsync() => await _dbContainer.StartAsync();
 
-    public new async Task DisposeAsync()
-    {
-        await _dbContainer.StopAsync();
-    }
+    public new async Task DisposeAsync() => await _dbContainer.StopAsync();
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
+    protected override void ConfigureWebHost(IWebHostBuilder builder) =>
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<CatalogContext>();
             services.AddDbContext<CatalogContext>(optionsBuilder =>
                 optionsBuilder.UseSqlServer(_dbContainer.GetConnectionString()));
         });
-    }
 }

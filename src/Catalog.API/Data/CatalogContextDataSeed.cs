@@ -9,14 +9,15 @@ public static class CatalogContextDataSeed
     {
         if (!context.CatalogItems.Any())
         {
-            var environmentContentRootPath = environment.ContentRootPath;
-            var sourcePath = Path.Combine(environmentContentRootPath, "Setup", "Catalog.json");
-            var sourceJson = await File.ReadAllTextAsync(sourcePath);
-            var catalogSourceEntry = JsonSerializer.Deserialize<List<CatalogSourceEntry>>(sourceJson)!;
+            string environmentContentRootPath = environment.ContentRootPath;
+            string sourcePath = Path.Combine(environmentContentRootPath, "Setup", "Catalog.json");
+            string sourceJson = await File.ReadAllTextAsync(sourcePath);
+            List<CatalogSourceEntry>? catalogSourceEntry =
+                JsonSerializer.Deserialize<List<CatalogSourceEntry>>(sourceJson)!;
 
             // Seed CatalogType
             context.Types.RemoveRange(context.Types);
-            var types = catalogSourceEntry.Select(i => i.Type).Distinct()
+            IEnumerable<CatalogType> types = catalogSourceEntry.Select(i => i.Type).Distinct()
                 .Select(t => new CatalogType { Type = t });
             await context.Types.AddRangeAsync(types);
             await context.SaveChangesAsync();
@@ -24,7 +25,7 @@ public static class CatalogContextDataSeed
 
             // Seed CatalogBrand
             context.Brands.RemoveRange(context.Brands);
-            var brands = catalogSourceEntry.Select(i => i.Brand).Distinct()
+            IEnumerable<CatalogBrand> brands = catalogSourceEntry.Select(i => i.Brand).Distinct()
                 .Select(t => new CatalogBrand { Brand = t });
             await context.Brands.AddRangeAsync(brands);
             await context.SaveChangesAsync();
@@ -32,11 +33,11 @@ public static class CatalogContextDataSeed
 
 
             // Seed CatalogItem
-            var typeDic = context.Types.ToDictionary(x => x.Type, x => x.Id);
-            var brandDic = context.Brands.ToDictionary(x => x.Brand, x => x.Id);
+            Dictionary<string, int> typeDic = context.Types.ToDictionary(x => x.Type, x => x.Id);
+            Dictionary<string, int> brandDic = context.Brands.ToDictionary(x => x.Brand, x => x.Id);
 
             context.CatalogItems.RemoveRange(context.CatalogItems);
-            var catalogItems = catalogSourceEntry.Select(i => new CatalogItem
+            IEnumerable<CatalogItem> catalogItems = catalogSourceEntry.Select(i => new CatalogItem
             {
                 Id = 0,
                 Name = i.Name,

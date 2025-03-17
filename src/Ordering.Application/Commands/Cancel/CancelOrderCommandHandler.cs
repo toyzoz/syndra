@@ -1,5 +1,5 @@
 using MediatR;
-using Ordering.Domain.Orders;
+using Ordering.Domain.AggregateModels.Orders;
 
 namespace Ordering.Application.Commands.Cancel;
 
@@ -7,9 +7,12 @@ public class CancelOrderCommandHandler(IOrderRepository repository) : IRequestHa
 {
     public async Task<bool> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = await repository.GetByIdAsync(request.OrderNumber);
+        Order? order = await repository.GetByIdAsync(request.OrderNumber);
 
-        if (order is null) return false;
+        if (order is null)
+        {
+            return false;
+        }
 
         order.SetCancelledStatus();
 

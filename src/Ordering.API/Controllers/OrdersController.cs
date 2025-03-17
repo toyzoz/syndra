@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿
+
+
+using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Commands.Cancel;
@@ -9,7 +12,7 @@ using Ordering.Application.Commands.Ship;
 using Ordering.Application.Orders;
 using Ordering.Application.Queries;
 using Ordering.Application.Queries.ViewModels;
-using Ordering.Domain.Orders;
+using Ordering.Domain.AggregateModels.Orders;
 
 namespace Ordering.API.Controllers;
 
@@ -24,23 +27,23 @@ public class OrdersController(
     [HttpGet]
     public async Task<Ok<IEnumerable<Order>>> GetListByUserAsync()
     {
-        var user = "bob";
+        const string user = "bob";
 
-        var result = await orderQuery.GetOrderByUserAsync(user);
+        IEnumerable<Order>? result = await orderQuery.GetOrderByUserAsync(user);
         return TypedResults.Ok(result);
     }
 
     [HttpGet("{id:int}")]
     public async Task<Ok<Order>> GetByIdAsync(int id)
     {
-        var result = await orderQuery.GetOrderByIdAsync(id);
+        Order? result = await orderQuery.GetOrderByIdAsync(id);
         return TypedResults.Ok(result);
     }
 
     [HttpGet("card-type")]
     public async Task<Ok<List<CardTypeOutput>>> GetCardTypesAsync()
     {
-        var result = await orderQuery.GetCardTypesAsync();
+        List<CardTypeOutput>? result = await orderQuery.GetCardTypesAsync();
         return TypedResults.Ok(result);
     }
 
@@ -49,37 +52,38 @@ public class OrdersController(
     public async Task<Ok> CreateAsync(CreateOrderCommand request)
     {
         // todo: requestId
-        var requestId = Guid.NewGuid();
-        var identifiedCommand = new IdentifiedCommand<CreateOrderCommand, bool>(requestId, request);
-        var result = await sender.Send(identifiedCommand);
+        Guid requestId = Guid.NewGuid();
+        IdentifiedCommand<CreateOrderCommand, bool> identifiedCommand = new(requestId, request);
+        bool result = await sender.Send(identifiedCommand);
 
         if (result)
+        {
             logger.LogInformation("CreateOrderCommand succeeded - RequestId: {RequestId}", requestId);
+        }
         else
+        {
             logger.LogWarning("CreateOrderCommand failed - RequestId: {RequestId}", requestId);
+        }
 
         return TypedResults.Ok();
     }
 
     [HttpPost("draft")]
-    public async Task<OrderDraftDto> CreateDraftAsync(CreateOrderDraftCommand request)
-    {
-        return await sender.Send(request);
-    }
+    public async Task<OrderDraftDto> CreateDraftAsync(CreateOrderDraftCommand request) => await sender.Send(request);
 
     [HttpPut("cancel")]
     public async Task<Ok<bool>> CancelAsync(CancelOrderCommand command)
     {
-        var request = new IdentifiedCommand<CancelOrderCommand, bool>(Guid.NewGuid(), command);
-        var result = await sender.Send(request);
+        IdentifiedCommand<CancelOrderCommand, bool> request = new(Guid.NewGuid(), command);
+        bool result = await sender.Send(request);
         return TypedResults.Ok(result);
     }
 
     [HttpPut("ship")]
     public async Task<Ok<bool>> ShipAsync(ShipOrderCommand command)
     {
-        var request = new IdentifiedCommand<ShipOrderCommand, bool>(Guid.NewGuid(), command);
-        var result = await sender.Send(request);
+        IdentifiedCommand<ShipOrderCommand, bool> request = new(Guid.NewGuid(), command);
+        bool result = await sender.Send(request);
         return TypedResults.Ok(result);
     }
 }

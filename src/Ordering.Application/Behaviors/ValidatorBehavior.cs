@@ -1,4 +1,5 @@
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Extensions;
@@ -17,18 +18,19 @@ public class ValidatorBehavior<TRequest, TResponse>(
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var typeName = request.GetGenericTypeName();
-        var failures = validators
+        string? typeName = request.GetGenericTypeName();
+        List<ValidationFailure>? failures = validators
             .Select(v => v.Validate(request))
             .SelectMany(r => r.Errors)
             .Where(e => e is not null)
             .ToList();
 
         if (failures.Count != 0)
+        {
             logger.LogWarning("Validation errors - {CommandType} - Command: {@Command} - Errors: {@ValidationErrors}",
                 typeName, request, failures);
+        }
 
         return await next();
     }
 }
-

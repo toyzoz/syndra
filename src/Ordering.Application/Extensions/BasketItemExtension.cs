@@ -5,16 +5,18 @@ namespace Ordering.Application.Extensions;
 
 public static class BasketItemExtension
 {
-    public static OrderItemDto ToOrderItemDto(this BasketItem basketItem)
-    {
-        return new OrderItemDto
+    /// <summary>
+    ///     basket item to order item dto
+    /// </summary>
+    /// <param name="basketItem"></param>
+    /// <returns></returns>
+    public static OrderItemDto ToOrderItemDto(this BasketItem basketItem) =>
+        new()
         {
             ProductId = basketItem.ProductId,
             ProductName = basketItem.ProductName,
             UnitPrice = basketItem.UnitPrice,
-
             Units = basketItem.Quantity,
             PictureUrl = basketItem.PictureUrl
         };
-    }
 }

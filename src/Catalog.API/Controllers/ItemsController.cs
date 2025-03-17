@@ -4,6 +4,7 @@ using Catalog.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Catalog.API.Controllers;
 
@@ -22,16 +23,25 @@ public class ItemsController(
         [Description("Filter by brand.")] int? brand)
     {
         IQueryable<CatalogItem> root = context.CatalogItems;
-        if (name is not null) root = context.CatalogItems.Where(x => x.Name.StartsWith(name));
+        if (name is not null)
+        {
+            root = context.CatalogItems.Where(x => x.Name.StartsWith(name));
+        }
 
-        if (type is not null) root = root.Where(x => x.CatalogTypeId == type);
+        if (type is not null)
+        {
+            root = root.Where(x => x.CatalogTypeId == type);
+        }
 
-        if (brand is not null) root = root.Where(x => x.CatalogBrandId == brand);
+        if (brand is not null)
+        {
+            root = root.Where(x => x.CatalogBrandId == brand);
+        }
 
-        var count = await root.LongCountAsync();
-        var pageSize = request.PageSize;
-        var pageIndex = request.PageIndex;
-        var catalogItems = await root
+        long count = await root.LongCountAsync();
+        int pageSize = request.PageSize;
+        int pageIndex = request.PageIndex;
+        List<CatalogItem> catalogItems = await root
             .OrderBy(i => i.Name)
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
@@ -65,8 +75,11 @@ public class ItemsController(
     [HttpDelete("{id:int}")]
     public async Task<Results<NotFound, NoContent>> DeleteAsync(int id)
     {
-        var catalogItem = await context.CatalogItems.FindAsync(id);
-        if (catalogItem is null) return TypedResults.NotFound();
+        CatalogItem? catalogItem = await context.CatalogItems.FindAsync(id);
+        if (catalogItem is null)
+        {
+            return TypedResults.NotFound();
+        }
 
         context.CatalogItems.Remove(catalogItem);
         await context.SaveChangesAsync();
@@ -77,24 +90,27 @@ public class ItemsController(
     [HttpGet("{id:int}", Name = nameof(GetByIdAsync))]
     public async Task<Results<Ok<CatalogItem>, NotFound>> GetByIdAsync(int id)
     {
-        var catalogItem = await context.CatalogItems.FindAsync(id);
+        CatalogItem? catalogItem = await context.CatalogItems.FindAsync(id);
         return catalogItem is null ? TypedResults.NotFound() : TypedResults.Ok(catalogItem);
     }
 
-    [HttpGet("{id}")]
-    public async Task<Ok<List<CatalogItem>>> GetByIdsAsync(int[] id)
+    [HttpGet("{ids}")]
+    public async Task<Ok<List<CatalogItem>>> GetByIdsAsync(int[] ids)
     {
-        var catalogItem = await context.CatalogItems.Where(x => id.Contains(x.Id)).ToListAsync();
+        List<CatalogItem>? catalogItem = await context.CatalogItems.Where(x => ids.Contains(x.Id)).ToListAsync();
         return TypedResults.Ok(catalogItem);
     }
 
     [HttpPut("{id:int}")]
     public async Task<Results<CreatedAtRoute, NotFound>> UpdateAsync(int id, CatalogItem input)
     {
-        var catalogItem = await context.CatalogItems.FindAsync(id);
-        if (catalogItem is null) return TypedResults.NotFound();
+        CatalogItem? catalogItem = await context.CatalogItems.FindAsync(id);
+        if (catalogItem is null)
+        {
+            return TypedResults.NotFound();
+        }
 
-        var entityEntry = context.CatalogItems.Entry(catalogItem);
+        EntityEntry<CatalogItem>? entityEntry = context.CatalogItems.Entry(catalogItem);
         entityEntry.CurrentValues.SetValues(input);
 
         if (entityEntry.Property(e => e.Price).IsModified)
@@ -109,24 +125,25 @@ public class ItemsController(
     [HttpGet("{id:int}/pic")]
     public async Task<Results<PhysicalFileHttpResult, NotFound>> GetImageByIdAsync(int id)
     {
-        var item = await context.CatalogItems.FindAsync(id);
-        if (item is null) return TypedResults.NotFound();
+        CatalogItem? item = await context.CatalogItems.FindAsync(id);
+        if (item is null)
+        {
+            return TypedResults.NotFound();
+        }
 
-        var fullPath = GetFullPath(environment.ContentRootPath, item.PictureFileName);
-        var extension = Path.GetExtension(item.PictureFileName);
-        var imageMimeType = GetImageMimeTypeFromImageFileExtension(extension);
+        string? fullPath = GetFullPath(environment.ContentRootPath, item.PictureFileName);
+        string? extension = Path.GetExtension(item.PictureFileName);
+        string? imageMimeType = GetImageMimeTypeFromImageFileExtension(extension);
 
         return TypedResults.PhysicalFile(fullPath, imageMimeType);
     }
 
-    private static string GetFullPath(string environmentContentRootPath, string itemPictureFileName)
-    {
-        return Path.Combine(environmentContentRootPath, "Pics", itemPictureFileName);
-    }
 
-    private static string GetImageMimeTypeFromImageFileExtension(string extension)
-    {
-        return extension switch
+    private static string GetFullPath(string environmentContentRootPath, string itemPictureFileName) =>
+        Path.Combine(environmentContentRootPath, "Pics", itemPictureFileName);
+
+    private static string GetImageMimeTypeFromImageFileExtension(string extension) =>
+        extension switch
         {
             ".png" => "image/png",
             ".gif" => "image/gif",
@@ -139,5 +156,4 @@ public class ItemsController(
             ".webp" => "image/webp",
             _ => "application/octet-stream"
         };
-    }
 }

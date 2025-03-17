@@ -1,22 +1,31 @@
 using MediatR;
-using Ordering.Domain.Orders;
+using Microsoft.Extensions.Logging;
+using Ordering.Domain.AggregateModels.Orders;
 
 namespace Ordering.Application.Commands.Create;
 
-public class CreateOrderCommandHandler(IOrderRepository repository) : IRequestHandler<CreateOrderCommand, bool>
+public class CreateOrderCommandHandler(
+    IOrderRepository repository,
+    IOrderingIntegrationEventService integrationEventService,
+    ILogger<CreateOrderCommandHandler> logger)
+    : IRequestHandler<CreateOrderCommand, bool>
 {
     public async Task<bool> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        // new order
+        OrderStartedIntegrationEvent? orderStartedIntegrationEvent = new(request.UserId);
+        await integrationEventService.AddEventAsync(orderStartedIntegrationEvent);
 
-        // clear basket
+        Address address = new(request.Street, request.City, request.State, request.Country, request.ZipCode);
 
-        var address = new Address(request.Street, request.City, request.State, request.Country, request.ZipCode);
-        var order = new Order(address);
+        Order order = new(address, request.UserId);
 
-        foreach (var item in request.Items)
-            order.AddItem(item.ProductId, item.ProductName, item.PictureUrl, item.UnitPrice, item.Units, item.Discount);
+        foreach (OrderItemDto item in request.Items)
+        {
+            order.AddOrderItem(item.ProductId, item.ProductName, item.PictureUrl, item.UnitPrice, item.Units,
+                item.Discount);
+        }
 
+        logger.LogInformation("create order -order: {order}", order);
         await repository.AddAsync(order);
 
         return true;

@@ -1,3 +1,5 @@
+
+
 using Catalog.API.Data;
 using Catalog.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -13,7 +15,7 @@ public class TypesController(CatalogContext context) : ControllerBase
     [HttpGet]
     public async Task<Ok<List<CatalogType>>> GetListAsync()
     {
-        var types = await context.Types.OrderBy(x => x.Type).ToListAsync();
+        List<CatalogType>? types = await context.Types.OrderBy(x => x.Type).ToListAsync();
         return TypedResults.Ok(types);
     }
 }

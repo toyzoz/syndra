@@ -1,4 +1,4 @@
-namespace Ordering.Domain.Orders;
+namespace Ordering.Domain.AggregateModels.Orders;
 
 public enum OrderStatus
 {

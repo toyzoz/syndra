@@ -1,7 +1,7 @@
-using Ordering.Domain.Buyers.Events;
+using Ordering.Domain.AggregateModels.Buyers.Events;
 using Ordering.Domain.SeedWork;
 
-namespace Ordering.Domain.Buyers;
+namespace Ordering.Domain.AggregateModels.Buyers;
 
 public class Buyer : AggregateRoot
 {
@@ -29,17 +29,20 @@ public class Buyer : AggregateRoot
         DateTime expiration,
         int cardTypeId)
     {
-        var existingPayment = _paymentMethods
+        PaymentMethod? existingPayment = _paymentMethods
             .SingleOrDefault(pm => pm.IsEqualTo(cardTypeId, cardNumber, expiration));
 
-        var payment = new PaymentMethod(
+        PaymentMethod? payment = new(
             alias,
             cardNumber,
             securityNumber,
             cardHolderName,
             expiration,
             cardTypeId);
-        if (existingPayment is not null) return existingPayment;
+        if (existingPayment is not null)
+        {
+            return existingPayment;
+        }
 
         _paymentMethods.Add(payment);
         AddDomainEvent(new BuyerAndPaymentMethodVerifiedDomainEvent(this, payment));

@@ -2,7 +2,7 @@ using Ordering.Application;
 using Ordering.Application.Data;
 using Ordering.Application.Orders;
 using Ordering.Application.Queries;
-using Ordering.Domain.Orders;
+using Ordering.Domain.AggregateModels.Orders;
 using Ordering.Infrastructure.Data;
 using Ordering.Infrastructure.Extensions;
 using Ordering.Infrastructure.Idempotency;
@@ -24,7 +24,7 @@ public static class Extensions
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IOrderQuery, OrderQuery>();
         services.AddScoped<IRequestManager, RequestManager>();
-        
+
         return services;
     }
 }

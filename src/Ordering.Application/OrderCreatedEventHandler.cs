@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using Ordering.Domain.Orders.Events;
+using Ordering.Domain.AggregateModels.Orders.Events;
 
 namespace Ordering.Application;
 

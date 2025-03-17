@@ -14,25 +14,32 @@ public class BasketService(
     public override async Task<CustomerBasketResponse> GetBasket(GetBasketRequest request,
         ServerCallContext context)
     {
-        var userId = userIdentityService.GetUserIdentity();
-        if (userId == null) return new CustomerBasketResponse();
+        string? userId = userIdentityService.GetUserIdentity();
+        if (userId == null)
+        {
+            return new CustomerBasketResponse();
+        }
 
         if (logger.IsEnabled(LogLevel.Debug))
+        {
             logger.LogDebug("Begin GetBasketById call from method {Method} for basket id {Id}", context.Method,
                 userId);
+        }
 
 
-        var customerBasket = await repository.GetBasketAsync(userId);
+        CustomerBasket customerBasket = await repository.GetBasketAsync(userId);
 
         return MapToCustomerBasketResponse(customerBasket);
     }
 
     private static CustomerBasketResponse MapToCustomerBasketResponse(CustomerBasket customerBasket)
     {
-        var basketResponse = new CustomerBasketResponse();
+        CustomerBasketResponse? basketResponse = new();
 
-        foreach (var item in customerBasket.Items)
+        foreach (BasketItem item in customerBasket.Items)
+        {
             basketResponse.Items.Add(new BaskItem { ProductId = item.ProductId, Quantity = item.Quantity });
+        }
 
         return basketResponse;
     }
@@ -40,8 +47,12 @@ public class BasketService(
     public override async Task<DeleteBasketResponse> DeleteBasket(DeleteBasketRequest request,
         ServerCallContext context)
     {
-        var userId = userIdentityService.GetUserIdentity();
-        if (userId is null) ThrowNotAuthenticated();
+        string? userId = userIdentityService.GetUserIdentity();
+        if (userId is null)
+        {
+            ThrowNotAuthenticated();
+        }
+
         // return new DeleteBasketResponse();
         await repository.DeleteBasketAsync(userId);
         return new DeleteBasketResponse();
@@ -50,33 +61,30 @@ public class BasketService(
     public override async Task<CustomerBasketResponse> UpdateBasket(UpdateBasketRequest request,
         ServerCallContext context)
     {
-        var userId = userIdentityService.GetUserIdentity();
-        if (userId == null) ThrowNotAuthenticated();
+        string? userId = userIdentityService.GetUserIdentity();
+        if (userId == null)
+        {
+            ThrowNotAuthenticated();
+        }
 
-        var customerBasket = MapToCustomerBasket(userId, request);
-        var updatedBasket = await repository.UpdateBasketAsync(customerBasket);
+        CustomerBasket? customerBasket = MapToCustomerBasket(userId, request);
+        CustomerBasket? updatedBasket = await repository.UpdateBasketAsync(customerBasket);
         return MapToCustomerBasketResponse(updatedBasket);
     }
 
-    private static CustomerBasket MapToCustomerBasket(string userIdentity, UpdateBasketRequest request)
-    {
-        return new CustomerBasket
+    private static CustomerBasket MapToCustomerBasket(string userIdentity, UpdateBasketRequest request) =>
+        new()
         {
             BuyerId = userIdentity,
             Items = request.Items.Select(x => new BasketItem { ProductId = x.ProductId, Quantity = x.Quantity })
                 .ToList()
         };
-    }
 
     [DoesNotReturn]
-    private static void ThrowNotAuthenticated()
-    {
+    private static void ThrowNotAuthenticated() =>
         throw new RpcException(new Status(StatusCode.Unauthenticated, "User not authenticated"));
-    }
 
     [DoesNotReturn]
-    private static void ThrowBasketDoesNotExist(string userId)
-    {
+    private static void ThrowBasketDoesNotExist(string userId) =>
         throw new RpcException(new Status(StatusCode.NotFound, $"Basket with buyer id {userId} does not exist"));
-    }
 }

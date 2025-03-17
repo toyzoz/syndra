@@ -1,4 +1,4 @@
-namespace Ordering.Domain.Buyers;
+namespace Ordering.Domain.AggregateModels.Buyers;
 
 public class CardType
 {

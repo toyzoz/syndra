@@ -18,14 +18,17 @@ public abstract class IdentifiedCommandHandler<T, R>(
         IdentifiedCommand<T, R> request,
         CancellationToken cancellationToken)
     {
-        if (await requestManager.ExistAsync(request.Id)) return CreateResultForDuplicateRequest();
+        if (await requestManager.ExistAsync(request.Id))
+        {
+            return CreateResultForDuplicateRequest();
+        }
 
         await requestManager.CreateRequestForCommandAsync<T>(request.Id);
 
         try
         {
-            var command = request.Command;
-            var commandName = command.GetGenericTypeName();
+            T? command = request.Command;
+            string? commandName = command.GetGenericTypeName();
             string idProperty;
             string commandId;
 
@@ -59,7 +62,7 @@ public abstract class IdentifiedCommandHandler<T, R>(
                 commandId,
                 command);
 
-            var result = await mediator.Send(command, cancellationToken);
+            R? result = await mediator.Send(command, cancellationToken);
 
             logger.LogInformation(
                 "Command result: {@Result} - {CommandName} - {IdProperty}: {CommandId} ({@Command})",

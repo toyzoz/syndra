@@ -1,25 +1,25 @@
-﻿using Ordering.Domain.Exceptions;
-using Ordering.Domain.Orders.Events;
+﻿
+
+
+using Ordering.Domain.AggregateModels.Orders.Events;
+using Ordering.Domain.Exceptions;
 using Ordering.Domain.SeedWork;
 
-namespace Ordering.Domain.Orders;
+namespace Ordering.Domain.AggregateModels.Orders;
 
 public class Order : AggregateRoot
 {
     private readonly List<OrderItem> _orderItems = [];
-    public bool _isDraft;
+    private bool _isDraft;
 
     private Order()
     {
     }
 
-    public Order(Address address)
-    {
-        Address = address;
-    }
+    public Order(Address address, string buyerId) => Address = address;
 
-    public string BuyerId { get; set; }
-    public Address Address { get; private set; }
+    public int? BuyerId { get; private set; }
+    public Address Address { get; private set; } = null!;
     public DateTime OrderDate { get; private set; }
     public OrderStatus OrderStatus { get; private set; }
     public string Description { get; private set; } = null!;
@@ -27,22 +27,15 @@ public class Order : AggregateRoot
 
     public static Order NewDraft()
     {
-        var order = new Order
-        {
-            _isDraft = true
-        };
+        Order? order = new() { _isDraft = true };
 
         return order;
     }
 
-    public void AddItem(int productId,
-        string productName,
-        string productPicUrl,
-        decimal unitPrice,
-        int units,
+    public void AddOrderItem(int productId, string productName, string productPicUrl, decimal unitPrice, int units,
         decimal discount)
     {
-        var existingProduct = _orderItems.SingleOrDefault(oi => oi.ProductId == productId);
+        OrderItem? existingProduct = _orderItems.SingleOrDefault(oi => oi.ProductId == productId);
 
         if (existingProduct is null)
         {
@@ -61,7 +54,10 @@ public class Order : AggregateRoot
 
     public void SetAwaitingValidationStatus()
     {
-        if (OrderStatus != OrderStatus.Submitted) return;
+        if (OrderStatus != OrderStatus.Submitted)
+        {
+            return;
+        }
 
         AddDomainEvent(new OrderStatusChangedToAwaitingValidationDomainEvent(Id, _orderItems));
         OrderStatus = OrderStatus.AwaitingValidation;
@@ -70,7 +66,10 @@ public class Order : AggregateRoot
 
     public void SetStockConfirmedStatus()
     {
-        if (OrderStatus != OrderStatus.AwaitingValidation) return;
+        if (OrderStatus != OrderStatus.AwaitingValidation)
+        {
+            return;
+        }
 
         AddDomainEvent(new OrderStatusChangedToStockConfirmedDomainEvent(Id));
 
@@ -80,7 +79,11 @@ public class Order : AggregateRoot
 
     public void SetPaidStatus()
     {
-        if (OrderStatus != OrderStatus.StockConfirmed) return;
+        if (OrderStatus != OrderStatus.StockConfirmed)
+        {
+            return;
+        }
+
         AddDomainEvent(new OrderStatusChangedToPaidDomainEvent(Id, OrderItems));
 
         OrderStatus = OrderStatus.Paid;
@@ -90,22 +93,26 @@ public class Order : AggregateRoot
 
     public void SetShippedStatus()
     {
-        if (OrderStatus != OrderStatus.Paid) StatusChangeException(OrderStatus.Shipped);
+        if (OrderStatus != OrderStatus.Paid)
+        {
+            StatusChangeException(OrderStatus.Shipped);
+        }
 
         OrderStatus = OrderStatus.Shipped;
         Description = "The order was shipped.";
         AddDomainEvent(new OrderShippedDomainEvent(this));
     }
 
-    private void StatusChangeException(OrderStatus orderStatusToChange)
-    {
+    private void StatusChangeException(OrderStatus orderStatusToChange) =>
         throw new OrderingDomainException(
             $"Is not possible to change the order status from {OrderStatus} to {orderStatusToChange}.");
-    }
 
     public void SetCancelledStatus()
     {
-        if (OrderStatus is OrderStatus.Paid or OrderStatus.Shipped) StatusChangeException(OrderStatus.Cancelled);
+        if (OrderStatus is OrderStatus.Paid or OrderStatus.Shipped)
+        {
+            StatusChangeException(OrderStatus.Cancelled);
+        }
 
         OrderStatus = OrderStatus.Cancelled;
         Description = "The order was cancelled.";

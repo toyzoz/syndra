@@ -10,8 +10,5 @@ public class CancelOrderIdentifiedCommandHandler(
     ILogger<IdentifiedCommandHandler<CancelOrderCommand, bool>> logger)
     : IdentifiedCommandHandler<CancelOrderCommand, bool>(requestManager, mediator, logger)
 {
-    protected override bool CreateResultForDuplicateRequest()
-    {
-        return true;
-    }
+    protected override bool CreateResultForDuplicateRequest() => true;
 }

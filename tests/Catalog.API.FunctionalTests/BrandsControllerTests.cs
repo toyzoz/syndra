@@ -7,7 +7,7 @@ public class BrandsControllerTests(IntegrationTestWebAppFactory factory) : BaseI
     [Fact]
     public async Task GetListAsync()
     {
-        var response = await Client.GetAsync("/Brands");
+        HttpResponseMessage? response = await Client.GetAsync("/Brands");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 }

@@ -16,8 +16,8 @@ services:
       - SA_PASSWORD=Password123
     ports:
       - "1433:1433"
-#    volumes:
-#      - catalogdb_data:/var/opt/mssql
+  #    volumes:
+  #      - catalogdb_data:/var/opt/mssql
 
   ordering.api:
     environment:
@@ -36,8 +36,8 @@ services:
       - SA_PASSWORD=Password123
     ports:
       - "1434:1433"
-#    volumes:
-#      - orderingdb_data:/var/opt/mssql
+  #    volumes:
+  #      - orderingdb_data:/var/opt/mssql
 
 
   basket.api:
@@ -58,7 +58,7 @@ services:
     restart: always
     ports:
       - "6379:6379"
- 
+
 
   web.bff.shopping:
     environment:

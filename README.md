@@ -1,9 +1,24 @@
 # Syndra
 
-## todolist
+## Todolist
 
-catalog apis
+- [ ] get product list
+- [ ] get product list by brand and type
+- [ ] get product list by type
 
-领域事件
-集成事件
+- [ ] get product details
+
+- [ ] get brand list
+- [ ] get type list
+
+- [ ] get customer basket
+- [ ] basket update product
+- [ ] basket checkout
+
+- [ ] get customer order
+- [ ] get order details
+- [ ] create order
+- [ ] confirm order
+- [ ] cancel order
+
 
