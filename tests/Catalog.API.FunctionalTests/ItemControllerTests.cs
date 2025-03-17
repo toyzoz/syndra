@@ -19,7 +19,7 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
 
         // Assert
         response.EnsureSuccessStatusCode();
-        PaginatedItems<CatalogItem>? result = await response.Content.ReadFromJsonAsync<PaginatedItems<CatalogItem>>();
+        var result = await response.Content.ReadFromJsonAsync<PaginatedItems<CatalogItem>>();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(result);
         Assert.Equal(101, result.Count);
@@ -38,7 +38,7 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
         // Act
         var response = await Client.GetAsync($"/Items?{queryString}");
         response.EnsureSuccessStatusCode();
-        List<CatalogItem>? result = await response.Content.ReadFromJsonAsync<List<CatalogItem>>();
+        var result = await response.Content.ReadFromJsonAsync<List<CatalogItem>>();
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);

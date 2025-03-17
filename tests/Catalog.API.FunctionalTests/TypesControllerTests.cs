@@ -7,7 +7,7 @@ public class TypesControllerTests(IntegrationTestWebAppFactory factory) : BaseIn
     [Fact]
     public async Task GetListAsync()
     {
-        var response = await Client.GetAsync("/Types");
+        var response = await Client.GetAsync("/types");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 }

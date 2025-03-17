@@ -12,7 +12,7 @@ public static class CatalogContextDataSeed
             var environmentContentRootPath = environment.ContentRootPath;
             var sourcePath = Path.Combine(environmentContentRootPath, "Setup", "Catalog.json");
             var sourceJson = await File.ReadAllTextAsync(sourcePath);
-            List<CatalogSourceEntry>? catalogSourceEntry =
+            var catalogSourceEntry =
                 JsonSerializer.Deserialize<List<CatalogSourceEntry>>(sourceJson)!;
 
             // Seed CatalogType
@@ -34,7 +34,7 @@ public static class CatalogContextDataSeed
 
             // Seed CatalogItem
             var typeDic = context.Types.ToDictionary(x => x.Type, x => x.Id);
-            Dictionary<string, int> brandDic = context.Brands.ToDictionary(x => x.Brand, x => x.Id);
+            var brandDic = context.Brands.ToDictionary(x => x.Brand, x => x.Id);
 
             context.CatalogItems.RemoveRange(context.CatalogItems);
             IEnumerable<CatalogItem> catalogItems = catalogSourceEntry.Select(i => new CatalogItem
