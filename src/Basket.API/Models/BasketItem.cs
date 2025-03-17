@@ -16,10 +16,7 @@ public class BasketItem : IValidatableObject
     {
         List<ValidationResult>? results = new();
 
-        if (Quantity < 1)
-        {
-            results.Add(new ValidationResult("Invalid number of units", ["Quantity"]));
-        }
+        if (Quantity < 1) results.Add(new ValidationResult("Invalid number of units", ["Quantity"]));
 
         return results;
     }

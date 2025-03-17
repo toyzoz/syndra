@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Ordering.Application.Commands.Cancel;
 using Ordering.Application.Commands.Create;
 using Ordering.Application.Commands.Ship;
-using Ordering.Application.Extensions;
 
 namespace Ordering.Application.Commands.Identified;
 
@@ -19,17 +18,14 @@ public abstract class IdentifiedCommandHandler<T, R>(
         IdentifiedCommand<T, R> request,
         CancellationToken cancellationToken)
     {
-        if (await requestManager.ExistAsync(request.Id))
-        {
-            return CreateResultForDuplicateRequest();
-        }
+        if (await requestManager.ExistAsync(request.Id)) return CreateResultForDuplicateRequest();
 
         await requestManager.CreateRequestForCommandAsync<T>(request.Id);
 
         try
         {
-            T? command = request.Command;
-            string? commandName = command.GetGenericTypeName();
+            var command = request.Command;
+            var commandName = command.GetGenericTypeName();
             string idProperty;
             string commandId;
 
@@ -63,7 +59,7 @@ public abstract class IdentifiedCommandHandler<T, R>(
                 commandId,
                 command);
 
-            R? result = await mediator.Send(command, cancellationToken);
+            var result = await mediator.Send(command, cancellationToken);
 
             logger.LogInformation(
                 "Command result: {@Result} - {CommandName} - {IdProperty}: {CommandId} ({@Command})",

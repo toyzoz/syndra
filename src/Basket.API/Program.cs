@@ -1,6 +1,6 @@
 using Basket.API.Services;
 
-WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddGrpc()
@@ -12,7 +12,7 @@ builder.Services.AddGrpc()
 //     c.SwaggerDoc("v1", new() { Title = "Basket.API", Version = "v1" });
 // });
 
-WebApplication? app = builder.Build();
+var app = builder.Build();
 
 // if (app.Environment.IsDevelopment())
 // {
@@ -28,5 +28,5 @@ app.Run();
 
 namespace Basket.API
 {
-    public partial class Program;
+    public class Program;
 }

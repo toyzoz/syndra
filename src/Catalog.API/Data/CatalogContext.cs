@@ -10,6 +10,8 @@ public class CatalogContext(DbContextOptions<CatalogContext> options) : DbContex
     public virtual DbSet<CatalogType> Types { get; set; }
     public virtual DbSet<CatalogBrand> Brands { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) =>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
 }

@@ -7,23 +7,23 @@ namespace EventBusRabbitMQ;
 
 public class RabbitMQEventBus : IEventBus
 {
-    private readonly string exchangeName = "eshop_event_bus";
+    private const string ExchangeName = "eshop_event_bus";
 
     public async Task PublishAsync(IntegrationEvent @event)
     {
-        string routingKey = @event.GetGenericTypeName();
+        var routingKey = @event.GetGenericTypeName();
 
         ConnectionFactory factory = new() { HostName = "localhost" };
-        using IConnection connection = await factory.CreateConnectionAsync();
-        using IChannel channel = await connection.CreateChannelAsync();
+        await using var connection = await factory.CreateConnectionAsync();
+        await using var channel = await connection.CreateChannelAsync();
         // exchange
-        await channel.ExchangeDeclareAsync(exchangeName,
+        await channel.ExchangeDeclareAsync(ExchangeName,
             ExchangeType.Direct);
 
 
-        string message = JsonSerializer.Serialize(@event);
-        byte[] body = Encoding.UTF8.GetBytes(message);
+        var message = JsonSerializer.Serialize(@event);
+        var body = Encoding.UTF8.GetBytes(message);
 
-        await channel.BasicPublishAsync(exchangeName, routingKey, body);
+        await channel.BasicPublishAsync(ExchangeName, routingKey, body);
     }
 }

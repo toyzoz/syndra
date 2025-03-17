@@ -19,11 +19,9 @@ public class CreateOrderCommandHandler(
 
         Order order = new(address, request.UserId);
 
-        foreach (OrderItemDto item in request.Items)
-        {
+        foreach (var item in request.Items)
             order.AddOrderItem(item.ProductId, item.ProductName, item.PictureUrl, item.UnitPrice, item.Units,
                 item.Discount);
-        }
 
         logger.LogInformation("create order -order: {order}", order);
         await repository.AddAsync(order);

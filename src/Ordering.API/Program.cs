@@ -3,7 +3,7 @@ using Ordering.Application.Extensions;
 using Ordering.Infrastructure.Extensions;
 using Scalar.AspNetCore;
 
-WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -14,7 +14,7 @@ builder.Services
     .AddDatabase(builder.Configuration);
 
 
-WebApplication? app = builder.Build();
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -31,5 +31,5 @@ app.Run();
 
 namespace Ordering.API
 {
-    public partial class Program;
+    public class Program;
 }

@@ -7,12 +7,9 @@ public class ShipOrderCommandHandler(IOrderRepository repository) : IRequestHand
 {
     public async Task<bool> Handle(ShipOrderCommand request, CancellationToken cancellationToken)
     {
-        Order? order = await repository.GetByIdAsync(request.OrderNumber);
+        var order = await repository.GetByIdAsync(request.OrderNumber);
 
-        if (order is null)
-        {
-            return false;
-        }
+        if (order is null) return false;
 
         order.SetShippedStatus();
 

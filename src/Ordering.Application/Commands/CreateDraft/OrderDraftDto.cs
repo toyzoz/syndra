@@ -8,8 +8,9 @@ public record OrderDraftDto
     public decimal Total { get; init; }
     public required IEnumerable<OrderItemDto> OrderItems { get; init; }
 
-    public static OrderDraftDto FromOrder(Order order) =>
-        new()
+    public static OrderDraftDto FromOrder(Order order)
+    {
+        return new OrderDraftDto
         {
             Total = order.OrderItems.Sum(i => i.UnitPrice * i.Units),
             OrderItems = order.OrderItems.Select(i => new OrderItemDto
@@ -21,4 +22,5 @@ public record OrderDraftDto
                 PictureUrl = i.PictureUrl
             })
         };
+    }
 }

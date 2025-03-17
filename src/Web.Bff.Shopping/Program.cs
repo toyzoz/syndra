@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.RateLimiting;
 
-WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
@@ -29,12 +29,9 @@ builder.Services.AddReverseProxy()
     ;
 
 
-WebApplication? app = builder.Build();
+var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
 app.UseCors("AllowAll");
 

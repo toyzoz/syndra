@@ -10,5 +10,8 @@ public class ShipOrderIdentifiedCommandHandler(
     ILogger<IdentifiedCommandHandler<ShipOrderCommand, bool>> logger)
     : IdentifiedCommandHandler<ShipOrderCommand, bool>(requestManager, mediator, logger)
 {
-    protected override bool CreateResultForDuplicateRequest() => true;
+    protected override bool CreateResultForDuplicateRequest()
+    {
+        return true;
+    }
 }

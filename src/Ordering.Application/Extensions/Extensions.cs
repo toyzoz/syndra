@@ -10,8 +10,8 @@ public static class Extensions
     {
         services.AddMediatR(cfg =>
         {
-            Assembly? v1 = typeof(Extensions).Assembly;
-            Assembly? v2 = Assembly.GetExecutingAssembly();
+            var v1 = typeof(Extensions).Assembly;
+            var v2 = Assembly.GetExecutingAssembly();
             cfg.RegisterServicesFromAssembly(typeof(Extensions).Assembly);
         });
 

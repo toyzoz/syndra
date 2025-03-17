@@ -14,30 +14,17 @@ public class PaymentMethod
         DateTime expiration,
         int cardTypeId)
     {
-        if (expiration <= DateTime.UtcNow)
-        {
-            throw new ArgumentException("Expiration date must be in the future.");
-        }
+        if (expiration <= DateTime.UtcNow) throw new ArgumentException("Expiration date must be in the future.");
 
-        if (string.IsNullOrWhiteSpace(alias))
-        {
-            throw new ArgumentException("Alias cannot be null or empty.");
-        }
+        if (string.IsNullOrWhiteSpace(alias)) throw new ArgumentException("Alias cannot be null or empty.");
 
-        if (string.IsNullOrWhiteSpace(cardNumber))
-        {
-            throw new ArgumentException("Card number cannot be null or empty.");
-        }
+        if (string.IsNullOrWhiteSpace(cardNumber)) throw new ArgumentException("Card number cannot be null or empty.");
 
         if (string.IsNullOrWhiteSpace(securityNumber))
-        {
             throw new ArgumentException("Security number cannot be null or empty.");
-        }
 
         if (string.IsNullOrWhiteSpace(cardHolderName))
-        {
             throw new ArgumentException("Card holder name cannot be null or empty.");
-        }
 
 
         Alias = alias;
@@ -66,8 +53,10 @@ public class PaymentMethod
     public int CardTypeId { get; set; }
     public CardType? CardType { get; set; }
 
-    public bool IsEqualTo(int cardTypeId, string cardNumber, DateTime expiration) =>
-        CardTypeId == cardTypeId &&
-        CardNumber == cardNumber &&
-        Expiration == expiration;
+    public bool IsEqualTo(int cardTypeId, string cardNumber, DateTime expiration)
+    {
+        return CardTypeId == cardTypeId &&
+               CardNumber == cardNumber &&
+               Expiration == expiration;
+    }
 }

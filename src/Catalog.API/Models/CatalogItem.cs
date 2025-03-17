@@ -25,34 +25,25 @@ public class CatalogItem
 
     public int RemoveStock(int quantityDesired)
     {
-        if (quantityDesired < 0)
-        {
-            throw new CatalogDomainException($"Invalid quantity {quantityDesired}");
-        }
+        if (quantityDesired < 0) throw new CatalogDomainException($"Invalid quantity {quantityDesired}");
 
-        if (AvailableStock == 0)
-        {
-            throw new CatalogDomainException("Empty stock, product is sold out");
-        }
+        if (AvailableStock == 0) throw new CatalogDomainException("Empty stock, product is sold out");
 
-        int removeStock = Math.Min(AvailableStock, quantityDesired);
+        var removeStock = Math.Min(AvailableStock, quantityDesired);
         AvailableStock -= removeStock;
         return removeStock;
     }
 
     public int AddStock(int quantity)
     {
-        if (quantity < 0)
-        {
-            throw new CatalogDomainException(" Invalid quantity");
-        }
+        if (quantity < 0) throw new CatalogDomainException(" Invalid quantity");
 
-        int original = AvailableStock;
+        var original = AvailableStock;
 
         // 如果库存超过最大库存阈值
         if (AvailableStock + quantity > MaxStockThreshold)
         {
-            int maxStockThreshold = MaxStockThreshold - AvailableStock;
+            var maxStockThreshold = MaxStockThreshold - AvailableStock;
             AvailableStock = maxStockThreshold;
             return maxStockThreshold;
         }

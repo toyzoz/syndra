@@ -13,7 +13,10 @@ public class Order : AggregateRoot
     {
     }
 
-    public Order(Address address, string buyerId) => Address = address;
+    public Order(Address address, string buyerId)
+    {
+        Address = address;
+    }
 
     public int? BuyerId { get; private set; }
     public Address Address { get; private set; } = null!;
@@ -25,22 +28,16 @@ public class Order : AggregateRoot
     public static Order NewDraft()
     {
         Order? order = new() { _isDraft = true };
-
         return order;
     }
 
     public void AddOrderItem(int productId, string productName, string productPicUrl, decimal unitPrice, int units,
         decimal discount)
     {
-        OrderItem? existingProduct = _orderItems.SingleOrDefault(oi => oi.ProductId == productId);
-
+        var existingProduct = _orderItems.SingleOrDefault(oi => oi.ProductId == productId);
         if (existingProduct is null)
         {
-            OrderItem orderItem = new(productId,
-                productName,
-                productPicUrl,
-                unitPrice,
-                units, discount);
+            OrderItem orderItem = new(productId, productName, productPicUrl, unitPrice, units, discount);
             _orderItems.Add(orderItem);
         }
         else
@@ -51,10 +48,7 @@ public class Order : AggregateRoot
 
     public void SetAwaitingValidationStatus()
     {
-        if (OrderStatus != OrderStatus.Submitted)
-        {
-            return;
-        }
+        if (OrderStatus != OrderStatus.Submitted) return;
 
         AddDomainEvent(new OrderStatusChangedToAwaitingValidationDomainEvent(Id, _orderItems));
         OrderStatus = OrderStatus.AwaitingValidation;
@@ -63,26 +57,18 @@ public class Order : AggregateRoot
 
     public void SetStockConfirmedStatus()
     {
-        if (OrderStatus != OrderStatus.AwaitingValidation)
-        {
-            return;
-        }
+        if (OrderStatus != OrderStatus.AwaitingValidation) return;
 
         AddDomainEvent(new OrderStatusChangedToStockConfirmedDomainEvent(Id));
-
         OrderStatus = OrderStatus.StockConfirmed;
         Description = "All the items were confirmed with available stock.";
     }
 
     public void SetPaidStatus()
     {
-        if (OrderStatus != OrderStatus.StockConfirmed)
-        {
-            return;
-        }
+        if (OrderStatus != OrderStatus.StockConfirmed) return;
 
         AddDomainEvent(new OrderStatusChangedToPaidDomainEvent(Id, OrderItems));
-
         OrderStatus = OrderStatus.Paid;
         Description =
             "The payment was performed at a simulated \"American Bank checking bank account ending on XX35071\"";
@@ -90,26 +76,22 @@ public class Order : AggregateRoot
 
     public void SetShippedStatus()
     {
-        if (OrderStatus != OrderStatus.Paid)
-        {
-            StatusChangeException(OrderStatus.Shipped);
-        }
+        if (OrderStatus != OrderStatus.Paid) StatusChangeException(OrderStatus.Shipped);
 
         OrderStatus = OrderStatus.Shipped;
         Description = "The order was shipped.";
         AddDomainEvent(new OrderShippedDomainEvent(this));
     }
 
-    private void StatusChangeException(OrderStatus orderStatusToChange) =>
+    private void StatusChangeException(OrderStatus orderStatusToChange)
+    {
         throw new OrderingDomainException(
             $"Is not possible to change the order status from {OrderStatus} to {orderStatusToChange}.");
+    }
 
     public void SetCancelledStatus()
     {
-        if (OrderStatus is OrderStatus.Paid or OrderStatus.Shipped)
-        {
-            StatusChangeException(OrderStatus.Cancelled);
-        }
+        if (OrderStatus is OrderStatus.Paid or OrderStatus.Shipped) StatusChangeException(OrderStatus.Cancelled);
 
         OrderStatus = OrderStatus.Cancelled;
         Description = "The order was cancelled.";

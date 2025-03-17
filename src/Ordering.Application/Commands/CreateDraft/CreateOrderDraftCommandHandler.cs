@@ -10,11 +10,10 @@ public class CreateOrderDraftCommandHandler
 {
     public Task<OrderDraftDto> Handle(CreateOrderDraftCommand request, CancellationToken cancellationToken)
     {
-        Order? draftOrder = Order.NewDraft();
+        var draftOrder = Order.NewDraft();
         List<OrderItemDto>? orderItemDtos = request.Items.Select(i => i.ToOrderItemDto()).ToList();
 
-        foreach (OrderItemDto? item in orderItemDtos)
-        {
+        foreach (var item in orderItemDtos)
             draftOrder.AddOrderItem(
                 item.ProductId,
                 item.ProductName,
@@ -22,7 +21,6 @@ public class CreateOrderDraftCommandHandler
                 item.UnitPrice,
                 item.Units,
                 item.Discount);
-        }
 
         return Task.FromResult(OrderDraftDto.FromOrder(draftOrder));
     }

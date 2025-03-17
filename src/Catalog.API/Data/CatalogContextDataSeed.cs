@@ -9,9 +9,9 @@ public static class CatalogContextDataSeed
     {
         if (!context.CatalogItems.Any())
         {
-            string environmentContentRootPath = environment.ContentRootPath;
-            string sourcePath = Path.Combine(environmentContentRootPath, "Setup", "Catalog.json");
-            string sourceJson = await File.ReadAllTextAsync(sourcePath);
+            var environmentContentRootPath = environment.ContentRootPath;
+            var sourcePath = Path.Combine(environmentContentRootPath, "Setup", "Catalog.json");
+            var sourceJson = await File.ReadAllTextAsync(sourcePath);
             List<CatalogSourceEntry>? catalogSourceEntry =
                 JsonSerializer.Deserialize<List<CatalogSourceEntry>>(sourceJson)!;
 
@@ -25,7 +25,7 @@ public static class CatalogContextDataSeed
 
             // Seed CatalogBrand
             context.Brands.RemoveRange(context.Brands);
-            IEnumerable<CatalogBrand> brands = catalogSourceEntry.Select(i => i.Brand).Distinct()
+            var brands = catalogSourceEntry.Select(i => i.Brand).Distinct()
                 .Select(t => new CatalogBrand { Brand = t });
             await context.Brands.AddRangeAsync(brands);
             await context.SaveChangesAsync();
@@ -33,7 +33,7 @@ public static class CatalogContextDataSeed
 
 
             // Seed CatalogItem
-            Dictionary<string, int> typeDic = context.Types.ToDictionary(x => x.Type, x => x.Id);
+            var typeDic = context.Types.ToDictionary(x => x.Type, x => x.Id);
             Dictionary<string, int> brandDic = context.Brands.ToDictionary(x => x.Brand, x => x.Id);
 
             context.CatalogItems.RemoveRange(context.CatalogItems);

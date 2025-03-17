@@ -26,21 +26,21 @@ public class OrdersController(
     {
         const string user = "bob";
 
-        IEnumerable<Order>? result = await orderQuery.GetOrderByUserAsync(user);
+        var result = await orderQuery.GetOrderByUserAsync(user);
         return TypedResults.Ok(result);
     }
 
     [HttpGet("{id:int}")]
     public async Task<Ok<Order>> GetByIdAsync(int id)
     {
-        Order? result = await orderQuery.GetOrderByIdAsync(id);
+        var result = await orderQuery.GetOrderByIdAsync(id);
         return TypedResults.Ok(result);
     }
 
     [HttpGet("card-type")]
     public async Task<Ok<List<CardTypeOutput>>> GetCardTypesAsync()
     {
-        List<CardTypeOutput>? result = await orderQuery.GetCardTypesAsync();
+        var result = await orderQuery.GetCardTypesAsync();
         return TypedResults.Ok(result);
     }
 
@@ -49,30 +49,29 @@ public class OrdersController(
     public async Task<Ok> CreateAsync(CreateOrderCommand request)
     {
         // todo: requestId
-        Guid requestId = Guid.NewGuid();
+        var requestId = Guid.NewGuid();
         IdentifiedCommand<CreateOrderCommand, bool> identifiedCommand = new(requestId, request);
-        bool result = await sender.Send(identifiedCommand);
+        var result = await sender.Send(identifiedCommand);
 
         if (result)
-        {
             logger.LogInformation("CreateOrderCommand succeeded - RequestId: {RequestId}", requestId);
-        }
         else
-        {
             logger.LogWarning("CreateOrderCommand failed - RequestId: {RequestId}", requestId);
-        }
 
         return TypedResults.Ok();
     }
 
     [HttpPost("draft")]
-    public async Task<OrderDraftDto> CreateDraftAsync(CreateOrderDraftCommand request) => await sender.Send(request);
+    public async Task<OrderDraftDto> CreateDraftAsync(CreateOrderDraftCommand request)
+    {
+        return await sender.Send(request);
+    }
 
     [HttpPut("cancel")]
     public async Task<Ok<bool>> CancelAsync(CancelOrderCommand command)
     {
         IdentifiedCommand<CancelOrderCommand, bool> request = new(Guid.NewGuid(), command);
-        bool result = await sender.Send(request);
+        var result = await sender.Send(request);
         return TypedResults.Ok(result);
     }
 
@@ -80,7 +79,7 @@ public class OrdersController(
     public async Task<Ok<bool>> ShipAsync(ShipOrderCommand command)
     {
         IdentifiedCommand<ShipOrderCommand, bool> request = new(Guid.NewGuid(), command);
-        bool result = await sender.Send(request);
+        var result = await sender.Send(request);
         return TypedResults.Ok(result);
     }
 }

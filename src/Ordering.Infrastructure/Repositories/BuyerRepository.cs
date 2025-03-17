@@ -7,19 +7,29 @@ namespace Ordering.Infrastructure.Repositories;
 
 public class BuyerRepository(OrderingContext context) : IBuyerRepository
 {
-    public Buyer Add(Buyer buyer) => context.Buyers.Add(buyer).Entity;
+    public Buyer Add(Buyer buyer)
+    {
+        return context.Buyers.Add(buyer).Entity;
+    }
 
-    public Buyer Update(Buyer buyer) => context.Buyers.Update(buyer).Entity;
+    public Buyer Update(Buyer buyer)
+    {
+        return context.Buyers.Update(buyer).Entity;
+    }
 
-    public async Task<Buyer?> FindAsync(string identity) =>
-        await context.Buyers
+    public async Task<Buyer?> FindAsync(string identity)
+    {
+        return await context.Buyers
             .Include(b => b.PaymentMethods)
             .Where(b => b.IdentityGuid == identity)
             .SingleOrDefaultAsync();
+    }
 
-    public async Task<Buyer?> FindByIdAsync(int id) =>
-        await context.Buyers
+    public async Task<Buyer?> FindByIdAsync(int id)
+    {
+        return await context.Buyers
             .Include(b => b.PaymentMethods)
             .Where(b => b.Id == id)
             .SingleOrDefaultAsync();
+    }
 }

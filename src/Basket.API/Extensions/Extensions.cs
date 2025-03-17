@@ -8,8 +8,8 @@ public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder app)
     {
-        string? redis = app.Configuration.GetConnectionString("Redis") ??
-                        throw new ArgumentNullException("basket.api");
+        var redis = app.Configuration.GetConnectionString("Redis") ??
+                    throw new ArgumentNullException("basket.api");
         ConnectionMultiplexer.Connect(redis);
         app.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redis));
 

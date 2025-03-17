@@ -23,24 +23,15 @@ public class ItemsController(
         [Description("Filter by brand.")] int? brand)
     {
         IQueryable<CatalogItem> root = context.CatalogItems;
-        if (name is not null)
-        {
-            root = context.CatalogItems.Where(x => x.Name.StartsWith(name));
-        }
+        if (name is not null) root = context.CatalogItems.Where(x => x.Name.StartsWith(name));
 
-        if (type is not null)
-        {
-            root = root.Where(x => x.CatalogTypeId == type);
-        }
+        if (type is not null) root = root.Where(x => x.CatalogTypeId == type);
 
-        if (brand is not null)
-        {
-            root = root.Where(x => x.CatalogBrandId == brand);
-        }
+        if (brand is not null) root = root.Where(x => x.CatalogBrandId == brand);
 
-        long count = await root.LongCountAsync();
-        int pageSize = request.PageSize;
-        int pageIndex = request.PageIndex;
+        var count = await root.LongCountAsync();
+        var pageSize = request.PageSize;
+        var pageIndex = request.PageIndex;
         List<CatalogItem> catalogItems = await root
             .OrderBy(i => i.Name)
             .Skip(pageSize * pageIndex)
@@ -75,11 +66,8 @@ public class ItemsController(
     [HttpDelete("{id:int}")]
     public async Task<Results<NotFound, NoContent>> DeleteAsync(int id)
     {
-        CatalogItem? catalogItem = await context.CatalogItems.FindAsync(id);
-        if (catalogItem is null)
-        {
-            return TypedResults.NotFound();
-        }
+        var catalogItem = await context.CatalogItems.FindAsync(id);
+        if (catalogItem is null) return TypedResults.NotFound();
 
         context.CatalogItems.Remove(catalogItem);
         await context.SaveChangesAsync();
@@ -90,7 +78,7 @@ public class ItemsController(
     [HttpGet("{id:int}", Name = nameof(GetByIdAsync))]
     public async Task<Results<Ok<CatalogItem>, NotFound>> GetByIdAsync(int id)
     {
-        CatalogItem? catalogItem = await context.CatalogItems.FindAsync(id);
+        var catalogItem = await context.CatalogItems.FindAsync(id);
         return catalogItem is null ? TypedResults.NotFound() : TypedResults.Ok(catalogItem);
     }
 
@@ -104,11 +92,8 @@ public class ItemsController(
     [HttpPut("{id:int}")]
     public async Task<Results<CreatedAtRoute, NotFound>> UpdateAsync(int id, CatalogItem input)
     {
-        CatalogItem? catalogItem = await context.CatalogItems.FindAsync(id);
-        if (catalogItem is null)
-        {
-            return TypedResults.NotFound();
-        }
+        var catalogItem = await context.CatalogItems.FindAsync(id);
+        if (catalogItem is null) return TypedResults.NotFound();
 
         EntityEntry<CatalogItem>? entityEntry = context.CatalogItems.Entry(catalogItem);
         entityEntry.CurrentValues.SetValues(input);
@@ -125,25 +110,25 @@ public class ItemsController(
     [HttpGet("{id:int}/pic")]
     public async Task<Results<PhysicalFileHttpResult, NotFound>> GetImageByIdAsync(int id)
     {
-        CatalogItem? item = await context.CatalogItems.FindAsync(id);
-        if (item is null)
-        {
-            return TypedResults.NotFound();
-        }
+        var item = await context.CatalogItems.FindAsync(id);
+        if (item is null) return TypedResults.NotFound();
 
-        string? fullPath = GetFullPath(environment.ContentRootPath, item.PictureFileName);
-        string? extension = Path.GetExtension(item.PictureFileName);
-        string? imageMimeType = GetImageMimeTypeFromImageFileExtension(extension);
+        var fullPath = GetFullPath(environment.ContentRootPath, item.PictureFileName);
+        var extension = Path.GetExtension(item.PictureFileName);
+        var imageMimeType = GetImageMimeTypeFromImageFileExtension(extension);
 
         return TypedResults.PhysicalFile(fullPath, imageMimeType);
     }
 
 
-    private static string GetFullPath(string environmentContentRootPath, string itemPictureFileName) =>
-        Path.Combine(environmentContentRootPath, "Pics", itemPictureFileName);
+    private static string GetFullPath(string environmentContentRootPath, string itemPictureFileName)
+    {
+        return Path.Combine(environmentContentRootPath, "Pics", itemPictureFileName);
+    }
 
-    private static string GetImageMimeTypeFromImageFileExtension(string extension) =>
-        extension switch
+    private static string GetImageMimeTypeFromImageFileExtension(string extension)
+    {
+        return extension switch
         {
             ".png" => "image/png",
             ".gif" => "image/gif",
@@ -156,4 +141,5 @@ public class ItemsController(
             ".webp" => "image/webp",
             _ => "application/octet-stream"
         };
+    }
 }

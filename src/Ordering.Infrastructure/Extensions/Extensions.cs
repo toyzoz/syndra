@@ -23,8 +23,8 @@ public static class Extensions
 
     public static async Task ApplyMigrationsAsync(this WebApplication app)
     {
-        using IServiceScope? scope = app.Services.CreateScope();
-        OrderingContext? context = scope.ServiceProvider.GetRequiredService<OrderingContext>();
+        using var scope = app.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<OrderingContext>();
         await context.Database.MigrateAsync();
     }
 
@@ -41,12 +41,9 @@ public static class Extensions
             .SelectMany(e => e.Entity.DomainEvents)
             .ToList();
 
-        foreach (EntityEntry<AggregateRoot>? item in hasEventEntity)
-        {
-            item.Entity.ClearDomainEvent();
-        }
+        foreach (EntityEntry<AggregateRoot>? item in hasEventEntity) item.Entity.ClearDomainEvent();
 
-        foreach (IDomainEvent? domainEvent in domainEvents)
+        foreach (var domainEvent in domainEvents)
         {
             Console.WriteLine($"{nameof(domainEvent)} published");
             await mediator.Publish(domainEvent);

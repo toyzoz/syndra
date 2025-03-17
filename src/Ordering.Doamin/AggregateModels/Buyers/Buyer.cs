@@ -21,28 +21,13 @@ public class Buyer : AggregateRoot
     public string Name { get; set; } = null!;
     public IReadOnlyCollection<PaymentMethod> PaymentMethods => _paymentMethods.AsReadOnly();
 
-    public PaymentMethod VerifyOrAddPaymentMethod(
-        string alias,
-        string cardNumber,
-        string securityNumber,
-        string cardHolderName,
-        DateTime expiration,
-        int cardTypeId)
+    public PaymentMethod VerifyOrAddPaymentMethod(string alias, string cardNumber, string securityNumber,
+        string cardHolderName, DateTime expiration, int cardTypeId)
     {
-        PaymentMethod? existingPayment = _paymentMethods
-            .SingleOrDefault(pm => pm.IsEqualTo(cardTypeId, cardNumber, expiration));
-
-        PaymentMethod? payment = new(
-            alias,
-            cardNumber,
-            securityNumber,
-            cardHolderName,
-            expiration,
-            cardTypeId);
-        if (existingPayment is not null)
-        {
-            return existingPayment;
-        }
+        var existingPayment =
+            _paymentMethods.SingleOrDefault(pm => pm.IsEqualTo(cardTypeId, cardNumber, expiration));
+        PaymentMethod? payment = new(alias, cardNumber, securityNumber, cardHolderName, expiration, cardTypeId);
+        if (existingPayment is not null) return existingPayment;
 
         _paymentMethods.Add(payment);
         AddDomainEvent(new BuyerAndPaymentMethodVerifiedDomainEvent(this, payment));

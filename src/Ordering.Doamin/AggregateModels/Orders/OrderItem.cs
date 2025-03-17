@@ -33,20 +33,14 @@ public class OrderItem : Entity
 
     internal void AddUnits(int units)
     {
-        if (units < 0)
-        {
-            throw new OrderingDomainException("Invalid unit");
-        }
+        if (units < 0) throw new OrderingDomainException("Invalid unit");
 
         Units += units;
     }
 
     public void NewDiscount(decimal discount)
     {
-        if (discount < 0)
-        {
-            throw new OrderingDomainException("Invalid discount");
-        }
+        if (discount < 0) throw new OrderingDomainException("Invalid discount");
 
         Discount = discount;
     }

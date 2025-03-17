@@ -10,8 +10,9 @@ public static class BasketItemExtension
     /// </summary>
     /// <param name="basketItem"></param>
     /// <returns></returns>
-    public static OrderItemDto ToOrderItemDto(this BasketItem basketItem) =>
-        new()
+    public static OrderItemDto ToOrderItemDto(this BasketItem basketItem)
+    {
+        return new OrderItemDto
         {
             ProductId = basketItem.ProductId,
             ProductName = basketItem.ProductName,
@@ -19,4 +20,5 @@ public static class BasketItemExtension
             Units = basketItem.Quantity,
             PictureUrl = basketItem.PictureUrl
         };
+    }
 }

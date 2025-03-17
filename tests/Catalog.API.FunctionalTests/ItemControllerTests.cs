@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
@@ -16,7 +15,7 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
         const int pageSize = 20;
         const int pageIndex = 0;
         // Act
-        HttpResponseMessage? response = await Client.GetAsync($"/Items?PageSize={pageSize}&PageIndex={pageIndex}");
+        var response = await Client.GetAsync($"/Items?PageSize={pageSize}&PageIndex={pageIndex}");
 
         // Assert
         response.EnsureSuccessStatusCode();
@@ -32,15 +31,12 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
     public async Task GetByIdsAsync_ReturnsOkResult()
     {
         int[] ids = [1, 2, 3];
-        NameValueCollection? queryString = HttpUtility.ParseQueryString(string.Empty);
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
 
-        foreach (int id in ids)
-        {
-            queryString.Add("ids", id.ToString());
-        }
+        foreach (var id in ids) queryString.Add("ids", id.ToString());
 
         // Act
-        HttpResponseMessage? response = await Client.GetAsync($"/Items?{queryString}");
+        var response = await Client.GetAsync($"/Items?{queryString}");
         response.EnsureSuccessStatusCode();
         List<CatalogItem>? result = await response.Content.ReadFromJsonAsync<List<CatalogItem>>();
 
@@ -69,11 +65,11 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
             MaxStockThreshold = 1000
         };
         // Act
-        HttpResponseMessage create = await Client.PostAsJsonAsync("/items", newItem);
+        var create = await Client.PostAsJsonAsync("/items", newItem);
         create.EnsureSuccessStatusCode();
-        Guid id = await create.Content.ReadFromJsonAsync<Guid>();
+        var id = await create.Content.ReadFromJsonAsync<Guid>();
 
-        HttpResponseMessage get = await Client.GetAsync($"/items/{id}");
+        var get = await Client.GetAsync($"/items/{id}");
         get.EnsureSuccessStatusCode();
 
         // Assert
@@ -86,10 +82,10 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
     {
         // Arrange
         // Act
-        HttpResponseMessage? responseDelete = await Client.DeleteAsync("items/1");
+        var responseDelete = await Client.DeleteAsync("items/1");
         responseDelete.EnsureSuccessStatusCode();
 
-        HttpResponseMessage? responseGet = await Client.GetAsync("/items/1");
+        var responseGet = await Client.GetAsync("/items/1");
         responseGet.EnsureSuccessStatusCode();
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, responseDelete.StatusCode);
@@ -101,7 +97,7 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
     {
         // Arrange
         // Act
-        HttpResponseMessage? responseDelete = await Client.DeleteAsync("items/9999");
+        var responseDelete = await Client.DeleteAsync("items/9999");
         responseDelete.EnsureSuccessStatusCode();
 
         // Assert

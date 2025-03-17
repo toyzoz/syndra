@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Commands.Create;
-using Ordering.Domain.AggregateModels.Buyers;
 using Ordering.Domain.AggregateModels.Buyers.Events;
 using Ordering.Domain.AggregateModels.Orders;
 using Ordering.Domain.AggregateModels.Orders.Events;
@@ -17,22 +16,13 @@ public class OrderCancelledDomainEventHandler(
 {
     public async Task Handle(OrderCancelledDomainEvent notification, CancellationToken cancellationToken)
     {
-        Order? order = await orderRepository.GetByIdAsync(notification.Order.Id);
-        if (order == null)
-        {
-            throw new ArgumentNullException(nameof(order));
-        }
+        var order = await orderRepository.GetByIdAsync(notification.Order.Id);
+        if (order == null) throw new ArgumentNullException(nameof(order));
 
-        if (order.BuyerId == null)
-        {
-            throw new ArgumentNullException(nameof(order.BuyerId));
-        }
+        if (order.BuyerId == null) throw new ArgumentNullException(nameof(order.BuyerId));
 
-        Buyer? buyer = await buyerRepository.FindByIdAsync(order.BuyerId.Value);
-        if (buyer == null)
-        {
-            throw new ArgumentNullException(nameof(buyer));
-        }
+        var buyer = await buyerRepository.FindByIdAsync(order.BuyerId.Value);
+        if (buyer == null) throw new ArgumentNullException(nameof(buyer));
 
         await orderingIntegrationEventService.AddEventAsync(
             new OrderStatusChangedToCancelledIntegrationEvent(order.Id, order.OrderStatus, buyer.Name,

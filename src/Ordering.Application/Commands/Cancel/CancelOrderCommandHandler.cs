@@ -7,12 +7,9 @@ public class CancelOrderCommandHandler(IOrderRepository repository) : IRequestHa
 {
     public async Task<bool> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
-        Order? order = await repository.GetByIdAsync(request.OrderNumber);
+        var order = await repository.GetByIdAsync(request.OrderNumber);
 
-        if (order is null)
-        {
-            return false;
-        }
+        if (order is null) return false;
 
         order.SetCancelledStatus();
 
