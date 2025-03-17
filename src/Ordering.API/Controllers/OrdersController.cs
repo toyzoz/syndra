@@ -1,7 +1,4 @@
-﻿
-
-
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Commands.Cancel;

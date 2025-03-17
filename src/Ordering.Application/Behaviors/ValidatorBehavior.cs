@@ -1,3 +1,4 @@
+using EventBus;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;

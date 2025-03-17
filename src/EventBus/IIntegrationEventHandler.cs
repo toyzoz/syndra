@@ -1,6 +1,3 @@
-
-
-
 namespace EventBus;
 
 public interface IIntegrationEventHandler

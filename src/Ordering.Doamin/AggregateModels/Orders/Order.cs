@@ -1,7 +1,4 @@
-﻿
-
-
-using Ordering.Domain.AggregateModels.Orders.Events;
+﻿using Ordering.Domain.AggregateModels.Orders.Events;
 using Ordering.Domain.Exceptions;
 using Ordering.Domain.SeedWork;
 

@@ -1,3 +1,4 @@
+using EventBus;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Commands.Cancel;

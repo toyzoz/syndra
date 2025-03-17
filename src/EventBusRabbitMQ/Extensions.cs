@@ -12,7 +12,3 @@ public static class Extensions
         builder.Services.AddSingleton<IEventBus, RabbitMQEventBus>();
     }
 }
-
-public interface IConnectionManager
-{
-}

@@ -26,4 +26,7 @@ app.MapGrpcService<BasketService>();
 
 app.Run();
 
-public partial class Program;
+namespace Basket.API
+{
+    public partial class Program;
+}

@@ -1,5 +1,3 @@
-
-
 using Catalog.API.Data;
 using Catalog.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;

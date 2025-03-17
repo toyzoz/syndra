@@ -1,7 +1,6 @@
 using System.Text;
 using System.Text.Json;
 using EventBus;
-using Ordering.Application.Extensions;
 using RabbitMQ.Client;
 
 namespace EventBusRabbitMQ;
