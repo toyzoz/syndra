@@ -44,7 +44,7 @@ public class ItemsController(
 
 
     [HttpPost]
-    public async Task<CreatedAtRoute> CreateAsync(CatalogItem input)
+    public async Task<Created> CreateAsync(CatalogItem input)
     {
         CatalogItem catalogItem = new()
         {
@@ -61,7 +61,9 @@ public class ItemsController(
         context.CatalogItems.Add(catalogItem);
         await context.SaveChangesAsync();
 
-        return TypedResults.CreatedAtRoute(nameof(GetByIdAsync), new { id = catalogItem.Id });
+        // return TypedResults.Created()
+
+        return TypedResults.Created($"/items/{catalogItem.Id}");
     }
 
     [HttpDelete("{id:int}")]

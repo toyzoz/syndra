@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace Catalog.API.FunctionalTests;
 
 public class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>

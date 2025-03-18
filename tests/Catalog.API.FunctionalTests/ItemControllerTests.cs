@@ -1,8 +1,10 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Web;
 using Catalog.API.Models;
+using Xunit;
 
 namespace Catalog.API.FunctionalTests;
 
@@ -42,11 +44,9 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.NotNull(response);
-        Debug.Assert(result != null, nameof(result) + " != null");
+        Assert.NotNull(result);
         Assert.Equal(3, result.Count);
     }
-
 
     [Fact]
     public async Task CreateAsync_ReturnsCreatedAtRoute()
@@ -67,14 +67,14 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
         // Act
         var create = await Client.PostAsJsonAsync("/items", newItem);
         create.EnsureSuccessStatusCode();
-        var id = await create.Content.ReadFromJsonAsync<Guid>();
 
-        var get = await Client.GetAsync($"/items/{id}");
+        var get = await Client.GetAsync(create.Headers.Location);
         get.EnsureSuccessStatusCode();
-
+      
         // Assert
         Assert.Equal(HttpStatusCode.Created, create.StatusCode);
-        Assert.Equal(HttpStatusCode.OK, create.StatusCode);
+        Assert.NotNull(create.Headers.Location);
+        Assert.Equal(HttpStatusCode.OK, get.StatusCode);
     }
 
     [Fact]
@@ -86,20 +86,17 @@ public class ItemControllerTests(IntegrationTestWebAppFactory factory)
         responseDelete.EnsureSuccessStatusCode();
 
         var responseGet = await Client.GetAsync("/items/1");
-        responseGet.EnsureSuccessStatusCode();
-        // Assert
+
         Assert.Equal(HttpStatusCode.NoContent, responseDelete.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, responseGet.StatusCode);
     }
 
     [Fact]
-    public async Task DeleteAsync_ReturnsNoFound_ForInValidId()
+    public async Task DeleteAsync_ReturnsNotFound_ForInvalidId()
     {
         // Arrange
         // Act
         var responseDelete = await Client.DeleteAsync("items/9999");
-        responseDelete.EnsureSuccessStatusCode();
-
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, responseDelete.StatusCode);
     }
