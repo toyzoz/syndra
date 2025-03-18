@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Ordering.Domain.AggregateModels.Orders.Events;
 
-namespace Ordering.Application;
+namespace Ordering.Application.IntegrationEvents.EventHandling;
 
 public class OrderCreatedEventHandler(ILogger<OrderCreatedEventHandler> logger)
     : INotificationHandler<OrderCreatedDomainEvent>

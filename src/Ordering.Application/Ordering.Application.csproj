@@ -7,15 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0"/>
-        <PackageReference Include="MediatR" Version="12.4.1"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2"/>
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+        <PackageReference Include="MediatR" Version="12.4.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EventBus\EventBus.csproj"/>
-        <ProjectReference Include="..\Ordering.Doamin\Ordering.Domain.csproj"/>
+        <ProjectReference Include="..\EventBus\EventBus.csproj" />
+        <ProjectReference Include="..\Ordering.Doamin\Ordering.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="IntegrationEvents\Events\" />
     </ItemGroup>
 
 </Project>

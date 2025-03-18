@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Ordering.Application.IntegrationEvents;
 using Ordering.Domain.AggregateModels.Orders;
 
 namespace Ordering.Application.Commands.Create;

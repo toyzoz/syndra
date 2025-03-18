@@ -1,11 +1,12 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Ordering.Application.Commands.Create;
+
+using Ordering.Application.IntegrationEvents;
 using Ordering.Domain.AggregateModels.Buyers.Events;
 using Ordering.Domain.AggregateModels.Orders;
 using Ordering.Domain.AggregateModels.Orders.Events;
 
-namespace Ordering.Application.DomainEvents;
+namespace Ordering.Application.DomainEventHandling;
 
 public class OrderCancelledDomainEventHandler(
     ILogger<OrderCancelledDomainEventHandler> logger,

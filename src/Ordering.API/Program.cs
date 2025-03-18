@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddProblemDetails();// ¥ÌŒÛœÍ«È todo https://www.milanjovanovic.tech/blog/problem-details-for-aspnetcore-apis
 
 builder.Services
     .AddApplicationServices(builder.Configuration)
@@ -24,7 +25,6 @@ if (app.Environment.IsDevelopment())
 
 await app.ApplyMigrationsAsync();
 
-// app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

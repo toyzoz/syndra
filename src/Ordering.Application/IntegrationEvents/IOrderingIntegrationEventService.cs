@@ -1,6 +1,6 @@
 using EventBus;
 
-namespace Ordering.Application.Commands.Create;
+namespace Ordering.Application.IntegrationEvents;
 
 public interface IOrderingIntegrationEventService
 {
