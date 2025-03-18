@@ -1,4 +1,4 @@
-namespace Ordering.Domain.AggregateModels.Buyers.Events;
+namespace Ordering.Domain.AggregateModels.Buyers;
 
 public interface IBuyerRepository
 {

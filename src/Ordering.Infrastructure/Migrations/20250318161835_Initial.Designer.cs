@@ -12,7 +12,7 @@ using Ordering.Infrastructure.Data;
 namespace Ordering.Infrastructure.Migrations
 {
     [DbContext(typeof(OrderingContext))]
-    [Migration("20250313075024_Initial")]
+    [Migration("20250318161835_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,7 +25,28 @@ namespace Ordering.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Ordering.Domain.Buyers.CardType", b =>
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Buyers.Buyer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("IdentityGuid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Buyers");
+                });
+
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Buyers.CardType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,7 +63,7 @@ namespace Ordering.Infrastructure.Migrations
                     b.ToTable("CardTypes");
                 });
 
-            modelBuilder.Entity("Ordering.Domain.Orders.Order", b =>
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Buyers.PaymentMethod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,9 +71,31 @@ namespace Ordering.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BuyerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("BuyerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CardTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("CardTypeId");
+
+                    b.ToTable("PaymentMethod");
+                });
+
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Orders.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BuyerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -69,7 +112,7 @@ namespace Ordering.Infrastructure.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Ordering.Domain.Orders.OrderItem", b =>
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Orders.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,9 +150,24 @@ namespace Ordering.Infrastructure.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("Ordering.Domain.Orders.Order", b =>
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Buyers.PaymentMethod", b =>
                 {
-                    b.OwnsOne("Ordering.Domain.Orders.Address", "Address", b1 =>
+                    b.HasOne("Ordering.Domain.AggregateModels.Buyers.Buyer", null)
+                        .WithMany("PaymentMethods")
+                        .HasForeignKey("BuyerId");
+
+                    b.HasOne("Ordering.Domain.AggregateModels.Buyers.CardType", "CardType")
+                        .WithMany()
+                        .HasForeignKey("CardTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CardType");
+                });
+
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Orders.Order", b =>
+                {
+                    b.OwnsOne("Ordering.Domain.AggregateModels.Orders.Address", "Address", b1 =>
                         {
                             b1.Property<int>("OrderId")
                                 .HasColumnType("int");
@@ -146,14 +204,19 @@ namespace Ordering.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Ordering.Domain.Orders.OrderItem", b =>
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Orders.OrderItem", b =>
                 {
-                    b.HasOne("Ordering.Domain.Orders.Order", null)
+                    b.HasOne("Ordering.Domain.AggregateModels.Orders.Order", null)
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId");
                 });
 
-            modelBuilder.Entity("Ordering.Domain.Orders.Order", b =>
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Buyers.Buyer", b =>
+                {
+                    b.Navigation("PaymentMethods");
+                });
+
+            modelBuilder.Entity("Ordering.Domain.AggregateModels.Orders.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });

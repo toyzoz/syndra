@@ -1,6 +1,8 @@
+using Ordering.Domain.SeedWork;
+
 namespace Ordering.Domain.AggregateModels.Buyers;
 
-public class PaymentMethod
+public class PaymentMethod : Entity
 {
     private PaymentMethod()
     {

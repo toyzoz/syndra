@@ -2,6 +2,7 @@ using Ordering.Application;
 using Ordering.Application.Data;
 using Ordering.Application.Orders;
 using Ordering.Application.Queries;
+using Ordering.Domain.AggregateModels.Buyers;
 using Ordering.Domain.AggregateModels.Orders;
 using Ordering.Infrastructure.Data;
 using Ordering.Infrastructure.Extensions;
@@ -21,8 +22,10 @@ public static class Extensions
 
         services.AddScoped<IApplicationContext, OrderingContext>();
         services.AddScoped<OrderService>();
+
         services.AddScoped<IOrderRepository, OrderRepository>();
-        services.AddScoped<IOrderQuery, OrderQuery>();
+        services.AddScoped<IBuyerRepository, BuyerRepository>();
+        //services.AddScoped<IOrderQuery, OrderQuery>();
         services.AddScoped<IRequestManager, RequestManager>();
 
         return services;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.ComponentModel;
+using System.Net;
 using Catalog.API.Data;
 using Catalog.API.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Catalog.API.Controllers;
-
+//https://stackoverflow.com/questions/54336578/cant-decide-between-taskiactionresult-iactionresult-and-actionresultthing
 [ApiController]
 [Route("[controller]")]
 public class ItemsController(
@@ -17,7 +18,8 @@ public class ItemsController(
     : ControllerBase
 {
     [HttpGet]
-    public async Task<Ok<PaginatedItems<CatalogItem>>> GetListAsync(
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<ActionResult<PaginatedItems<CatalogItem>>> GetListAsync(
         [FromQuery] PaginationRequest request,
         [Description("Filter by name.")] string? name,
         [Description("Filter by type.")] int? type,
@@ -38,13 +40,13 @@ public class ItemsController(
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
             .ToListAsync();
-
-        return TypedResults.Ok(new PaginatedItems<CatalogItem>(pageSize, pageIndex, count, catalogItems));
+        
+        return Ok(new PaginatedItems<CatalogItem>(pageSize, pageIndex, count, catalogItems));
     }
 
-
+    [ProducesResponseType((int)HttpStatusCode.Created)]
     [HttpPost]
-    public async Task<Created> CreateAsync(CatalogItem input)
+    public async Task<ActionResult> CreateAsync(CatalogItem input)
     {
         CatalogItem catalogItem = new()
         {
@@ -61,42 +63,45 @@ public class ItemsController(
         context.CatalogItems.Add(catalogItem);
         await context.SaveChangesAsync();
 
-        // return TypedResults.Created()
-
-        return TypedResults.Created($"/items/{catalogItem.Id}");
+        return CreatedAtRoute(nameof(GetByIdAsync), new { id = catalogItem.Id }, catalogItem);
     }
 
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [HttpDelete("{id:int}")]
-    public async Task<Results<NotFound, NoContent>> DeleteAsync(int id)
+    public async Task<ActionResult> DeleteAsync(int id)
     {
         var catalogItem = await context.CatalogItems.FindAsync(id);
-        if (catalogItem is null) return TypedResults.NotFound();
+        if (catalogItem is null) return NotFound();
 
         context.CatalogItems.Remove(catalogItem);
         await context.SaveChangesAsync();
 
-        return TypedResults.NoContent();
+        return NoContent();
     }
 
-    [HttpGet("{id:int}", Name = nameof(GetByIdAsync))]
-    public async Task<Results<Ok<CatalogItem>, NotFound>> GetByIdAsync(int id)
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [HttpGet("{id:int}",Name =nameof(GetByIdAsync))]
+    public async Task<ActionResult<CatalogItem>> GetByIdAsync(int id)
     {
         var catalogItem = await context.CatalogItems.FindAsync(id);
-        return catalogItem is null ? TypedResults.NotFound() : TypedResults.Ok(catalogItem);
+        return catalogItem is null ? NotFound() : Ok(catalogItem);
     }
 
+    [ProducesResponseType((int)HttpStatusCode.OK)]
     [HttpGet("{ids}")]
-    public async Task<Ok<List<CatalogItem>>> GetByIdsAsync(int[] ids)
+    public async Task<ActionResult<IEnumerable<CatalogItem>>> GetByIdsAsync(int[] ids)
     {
         var catalogItems = await context.CatalogItems.Where(x => ids.Contains(x.Id)).ToListAsync();
-        return TypedResults.Ok(catalogItems);
+        return Ok(catalogItems);
     }
 
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [HttpPut("{id:int}")]
-    public async Task<Results<CreatedAtRoute, NotFound>> UpdateAsync(int id, CatalogItem input)
+    public async Task<ActionResult> UpdateAsync(int id, CatalogItem input)
     {
         var catalogItem = await context.CatalogItems.FindAsync(id);
-        if (catalogItem is null) return TypedResults.NotFound();
+        if (catalogItem is null) return NotFound();
 
         EntityEntry<CatalogItem>? entityEntry = context.CatalogItems.Entry(catalogItem);
         entityEntry.CurrentValues.SetValues(input);
@@ -107,20 +112,23 @@ public class ItemsController(
         }
 
         await context.SaveChangesAsync();
-        return TypedResults.CreatedAtRoute(nameof(GetByIdAsync), new { id = catalogItem.Id });
+        // https://www.josephguadagno.net/2020/07/01/no-route-matches-the-supplied-values
+        return CreatedAtRoute(nameof(GetByIdAsync), new { id = catalogItem.Id }, catalogItem);
     }
 
+    //[ProducesResponseType((int)HttpStatusCode.OK)]
     [HttpGet("{id:int}/pic")]
-    public async Task<Results<PhysicalFileHttpResult, NotFound>> GetImageByIdAsync(int id)
+    public async Task<ActionResult> GetImageByIdAsync(int id)
     {
         var item = await context.CatalogItems.FindAsync(id);
-        if (item is null) return TypedResults.NotFound();
+        if (item is null) return NotFound();
 
         var fullPath = GetFullPath(environment.ContentRootPath, item.PictureFileName);
         var extension = Path.GetExtension(item.PictureFileName);
         var imageMimeType = GetImageMimeTypeFromImageFileExtension(extension);
 
-        return TypedResults.PhysicalFile(fullPath, imageMimeType);
+        var bytes = await System.IO.File.ReadAllBytesAsync(fullPath);
+        return File(bytes, imageMimeType);
     }
 
 

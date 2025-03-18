@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Ordering.Domain.AggregateModels.Buyers;
-using Ordering.Domain.AggregateModels.Buyers.Events;
 using Ordering.Infrastructure.Data;
 
 namespace Ordering.Infrastructure.Repositories;

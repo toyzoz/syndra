@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 using Ordering.Application.IntegrationEvents;
-using Ordering.Domain.AggregateModels.Buyers.Events;
+using Ordering.Domain.AggregateModels.Buyers;
 using Ordering.Domain.AggregateModels.Orders;
 using Ordering.Domain.AggregateModels.Orders.Events;
 
