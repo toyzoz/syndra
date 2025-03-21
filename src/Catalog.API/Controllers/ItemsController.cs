@@ -40,7 +40,7 @@ public class ItemsController(
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
             .ToListAsync();
-        
+
         return Ok(new PaginatedItems<CatalogItem>(pageSize, pageIndex, count, catalogItems));
     }
 
@@ -81,7 +81,7 @@ public class ItemsController(
     }
 
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    [HttpGet("{id:int}",Name =nameof(GetByIdAsync))]
+    [HttpGet("{id:int}", Name = nameof(GetByIdAsync))]
     public async Task<ActionResult<CatalogItem>> GetByIdAsync(int id)
     {
         var catalogItem = await context.CatalogItems.FindAsync(id);
@@ -116,7 +116,7 @@ public class ItemsController(
         return CreatedAtRoute(nameof(GetByIdAsync), new { id = catalogItem.Id }, catalogItem);
     }
 
-    //[ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(byte[]), (int)HttpStatusCode.OK)]
     [HttpGet("{id:int}/pic")]
     public async Task<ActionResult> GetImageByIdAsync(int id)
     {

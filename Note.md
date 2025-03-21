@@ -1,12 +1,17 @@
-## Controller 应该怎么处理返回值
+## Controller 应锟斤拷锟斤拷么锟斤拷锟斤拷锟斤拷锟斤拷值
 IActionResult vs ActionResult
 
-返回什么类型
-在openAPI 显示类型
-在openAPI 显示描述
+锟斤拷锟斤拷什么锟斤拷锟斤拷
+锟斤拷openAPI 锟斤拷示锟斤拷锟斤拷
+锟斤拷openAPI 锟斤拷示锟斤拷锟斤拷
 
-## Minimal API 怎么处理
+## Minimal API 锟斤拷么锟斤拷锟斤拷
 
 ## CreatedAtAction  No route matches the supplied values.
 
 https://stackoverflow.com/questions/39459348/asp-net-core-web-api-no-route-matches-the-supplied-values/61536687#61536687
+
+
+## restful api
+
+### 浠�涔堟槸restful api
